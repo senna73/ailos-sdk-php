@@ -14,7 +14,7 @@ class CooperadoCredentials
         private readonly string $codigoCooperativa,
         private readonly string $codigoConta,
         private readonly string $senha,
-        private readonly string $state = '',
+        private readonly string $state = 'default-state',
     ) {
         $this->validate();
     }

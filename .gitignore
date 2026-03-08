@@ -10,6 +10,7 @@ composer.lock
 # PHPUnit
 .phpunit.cache/
 .phpunit.result.cache
+/coverage/
 
 # IDEs
 .idea/
@@ -24,3 +25,6 @@ Thumbs.db
 # Logs e temporários
 *.log
 /tmp/
+
+# Credenciais — NUNCA commitar
+.env
