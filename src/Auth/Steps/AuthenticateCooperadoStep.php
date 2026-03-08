@@ -43,9 +43,12 @@ class AuthenticateCooperadoStep
     private function assertValidResponse(array $response): void
     {
         $status = $response['_status_code'] ?? 0;
+        $body   = $response['body'] ?? '';
 
-        if ($status === 401 || $status === 403) {
-            throw InvalidCredentialsException::invalidCooperadoCredentials();
+        $error = $this->extractHtmlError($body);
+
+        if ($error !== null) {
+            throw InvalidCredentialsException::invalidCooperadoCredentials($error);
         }
 
         if ($status >= 400) {
@@ -53,5 +56,27 @@ class AuthenticateCooperadoStep
                 "Unexpected response status: {$status}"
             );
         }
+    }
+
+    private function extractHtmlError(string $html): ?string
+    {
+        if (empty($html)) {
+            return null;
+        }
+
+        libxml_use_internal_errors(true);
+
+        $dom = new \DOMDocument();
+        $dom->loadHTML($html);
+
+        $xpath = new \DOMXPath($dom);
+
+        $nodes = $xpath->query("//div[contains(@class,'validation-summary-errors')]//li");
+
+        if ($nodes->length === 0) {
+            return null;
+        }
+
+        return trim($nodes->item(0)->textContent);
     }
 }
