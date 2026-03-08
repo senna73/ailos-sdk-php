@@ -124,26 +124,52 @@ class StepsTest extends TestCase
     }
 
     // AuthenticateCooperadoStep
-    public function test_authenticate_cooperado_succeeds_on_200(): void
+    public function test_authenticate_cooperado_succeeds_when_html_has_no_errors(): void
     {
         $this->expectNotToPerformAssertions();
 
+        $html = '<html><body><h1>OK</h1></body></html>';
+
         $httpClient = $this->createMock(HttpClientInterface::class);
-        $httpClient->method('postForm')->willReturn(['_status_code' => 200]);
+        $httpClient->method('postForm')->willReturn([
+            '_status_code' => 200,
+            'body' => $html,
+        ]);
 
         $step = new AuthenticateCooperadoStep($httpClient, $this->environment);
-        $step->execute($this->makeAccessToken(), new AuthId('id-123'), $this->makeCooperadoCredentials());
+
+        $step->execute(
+            $this->makeAccessToken(),
+            new AuthId('id-123'),
+            $this->makeCooperadoCredentials()
+        );
     }
 
-    public function test_authenticate_cooperado_throws_on_401(): void
+    public function test_authenticate_cooperado_throws_when_html_contains_error(): void
     {
         $this->expectException(InvalidCredentialsException::class);
 
+        $html = <<<HTML
+<div class="text-danger validation-summary-errors">
+    <ul>
+        <li>LG006 - Cooperado não possui acesso a plataforma API.</li>
+    </ul>
+</div>
+HTML;
+
         $httpClient = $this->createMock(HttpClientInterface::class);
-        $httpClient->method('postForm')->willReturn(['_status_code' => 401]);
+        $httpClient->method('postForm')->willReturn([
+            '_status_code' => 200,
+            'body' => $html,
+        ]);
 
         $step = new AuthenticateCooperadoStep($httpClient, $this->environment);
-        $step->execute($this->makeAccessToken(), new AuthId('id-123'), $this->makeCooperadoCredentials());
+
+        $step->execute(
+            $this->makeAccessToken(),
+            new AuthId('id-123'),
+            $this->makeCooperadoCredentials()
+        );
     }
 
     public function test_authenticate_cooperado_throws_on_unexpected_error(): void

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Ailos\Sdk;
 
 use Ailos\Sdk\Auth\AuthOrchestrator;
+use Ailos\Sdk\Auth\Callback\CallbackHandler;
 use Ailos\Sdk\Auth\Credentials\ClientCredentials;
 use Ailos\Sdk\Auth\Credentials\CooperadoCredentials;
 use Ailos\Sdk\Auth\Steps\AuthenticateCooperadoStep;
@@ -78,6 +79,14 @@ class AilosSdk
     }
 
     /**
+     * Retorna um handler pronto para processar o endpoint de callback.
+     */
+    public function callbackHandler(): CallbackHandler
+    {
+        return new CallbackHandler($this);
+    }
+
+    /**
      * Retorna um JWT válido — renova automaticamente se necessário.
      * Lança AuthenticationException se authenticate() nunca foi chamado.
      */
@@ -120,5 +129,15 @@ class AilosSdk
         if ($this->tokenStore instanceof InMemoryTokenStore) {
             $this->tokenStore->flush();
         }
+    }
+
+    public function getOrchestrator(): AuthOrchestrator
+    {
+        return $this->orchestrator;
+    }
+
+    public function getClientCredentials(): ClientCredentials
+    {
+        return $this->clientCredentials;
     }
 }
