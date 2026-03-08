@@ -8,7 +8,8 @@ class AuthId
 {
     public function __construct(
         private readonly string $value,
-    ) {}
+    ) {
+    }
 
     public function value(): string
     {

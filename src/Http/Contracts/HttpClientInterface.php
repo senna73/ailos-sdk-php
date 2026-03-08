@@ -11,4 +11,6 @@ interface HttpClientInterface
     public function post(string $url, array $headers = [], array $body = []): array;
 
     public function postForm(string $url, array $headers = [], array $fields = []): array;
+
+    public function postUrlEncoded(string $url, array $headers = [], string $body = ''): array;
 }
