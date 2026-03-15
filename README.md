@@ -1,6 +1,6 @@
 # Ailos SDK
 [![Packagist](https://img.shields.io/packagist/v/ailos/sdk)](https://packagist.org/packages/ailos/sdk)
-[![PHP Version](https://img.shields.io/badge/php-%5E8.4-blue.svg)](https://www.php.net/)
+[![PHP Version](https://img.shields.io/badge/php-%5E8.5-blue.svg)](https://www.php.net/)
 [![License](https://img.shields.io/github/license/ViniciusDeSenna/ailos-sdk-php)](LICENSE)
 [![Maintenance](https://img.shields.io/maintenance/yes/2026)]()
 [![Last Commit](https://img.shields.io/github/last-commit/ViniciusDeSenna/ailos-sdk-php)](https://github.com/ViniciusDeSenna/ailos-sdk-php/commits)
@@ -19,7 +19,7 @@ Este SDK foi desenvolvido para facilitar a integração com os serviços da **Co
 
 ## Requisitos
 
-- PHP `^8.3`
+- PHP `^8.5`
 - Extensão `curl` habilitada
 
 ---
