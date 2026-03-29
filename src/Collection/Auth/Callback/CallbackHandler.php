@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace Ailos\Sdk\Auth\Callback;
+namespace Ailos\Sdk\Collection\Auth\Callback;
 
-use Ailos\Sdk\Auth\Tokens\JwtToken;
+use Ailos\Sdk\Collection\Auth\Tokens\JwtToken;
 use Ailos\Sdk\Storage\Contracts\TokenStoreInterface;
 use Ailos\Sdk\Storage\TokenKeys;
 
-class CallbackHandler
+readonly class CallbackHandler
 {
     public function __construct(
-        private readonly TokenStoreInterface $tokenStore,
+        private TokenStoreInterface $tokenStore,
     ) {
     }
 
@@ -44,6 +44,8 @@ class CallbackHandler
     /**
      * Processa o callback a partir de um array.
      * Ideal para Laravel ($request->all()), Symfony, Slim, etc.
+     *
+     * @param array<string, mixed> $data
      */
     public function handleFromArray(array $data): CallbackPayload
     {

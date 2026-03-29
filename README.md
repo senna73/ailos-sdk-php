@@ -90,9 +90,7 @@ Para utilizar o SDK você precisará de:
 ```php
 <?php
 
-use Ailos\Sdk\AilosSdk;
-use Ailos\Sdk\Auth\Credentials\ClientCredentials;
-use Ailos\Sdk\Auth\Credentials\CooperadoCredentials;
+use Ailos\Sdk\AilosSdk;use Ailos\Sdk\Collection\Auth\Credentials\ClientCredentials;use Ailos\Sdk\Collection\Auth\Credentials\CooperadoCredentials;
 
 $clientCredentials = new ClientCredentials(
     consumerKey:    'sua-consumer-key',

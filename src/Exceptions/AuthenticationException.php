@@ -6,18 +6,18 @@ namespace Ailos\Sdk\Exceptions;
 
 class AuthenticationException extends AilosSdkException
 {
-    public static function failedToFetchAccessToken(string $reason): static
+    public static function failedToFetchAccessToken(string $reason): self
     {
-        return new static("Failed to fetch access token: {$reason}");
+        return new self("Failed to fetch access token: {$reason}");
     }
 
-    public static function failedToFetchAuthId(string $reason): static
+    public static function failedToFetchAuthId(string $reason): self
     {
-        return new static("Failed to fetch auth ID: {$reason}");
+        return new self("Failed to fetch auth ID: {$reason}");
     }
 
-    public static function failedToAuthenticateCooperado(string $reason): static
+    public static function failedToAuthenticateCooperado(string $reason): self
     {
-        return new static("Failed to authenticate cooperado: {$reason}");
+        return new self("Failed to authenticate cooperado: {$reason}");
     }
 }

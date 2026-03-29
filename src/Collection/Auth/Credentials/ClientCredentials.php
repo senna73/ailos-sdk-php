@@ -2,17 +2,17 @@
 
 declare(strict_types=1);
 
-namespace Ailos\Sdk\Auth\Credentials;
+namespace Ailos\Sdk\Collection\Auth\Credentials;
 
 use Ailos\Sdk\Exceptions\InvalidCredentialsException;
 use Ailos\Sdk\Support\Base64Encoder;
 
-class ClientCredentials
+readonly class ClientCredentials
 {
     public function __construct(
-        private readonly string $consumerKey,
-        private readonly string $consumerSecret,
-        private readonly Base64Encoder $encoder = new Base64Encoder(),
+        private string        $consumerKey,
+        private string        $consumerSecret,
+        private Base64Encoder $encoder = new Base64Encoder(),
     ) {
         $this->validate();
     }

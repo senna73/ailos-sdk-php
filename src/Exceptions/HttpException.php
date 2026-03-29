@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Ailos\Sdk\Exceptions;
 
-class HttpException extends AilosSdkException
+final class HttpException extends AilosSdkException
 {
     public function __construct(
         string $message,
@@ -19,17 +19,17 @@ class HttpException extends AilosSdkException
         return $this->statusCode;
     }
 
-    public static function fromResponse(int $statusCode, string $body): static
+    public static function fromResponse(int $statusCode, string $body): self
     {
-        return new static(
+        return new self(
             message: "HTTP request failed with status {$statusCode}: {$body}",
             statusCode: $statusCode,
         );
     }
 
-    public static function fromConnectionFailure(string $reason): static
+    public static function fromConnectionFailure(string $reason): self
     {
-        return new static(
+        return new self(
             message: "Connection failed: {$reason}",
             statusCode: 0,
         );

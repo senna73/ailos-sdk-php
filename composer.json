@@ -12,7 +12,8 @@
     "require": {
         "php": "^8.5",
         "ext-libxml": "*",
-        "ext-dom": "*"
+        "ext-dom": "*",
+        "ext-curl": "*"
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^3.0",

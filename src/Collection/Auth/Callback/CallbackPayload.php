@@ -2,20 +2,20 @@
 
 declare(strict_types=1);
 
-namespace Ailos\Sdk\Auth\Callback;
+namespace Ailos\Sdk\Collection\Auth\Callback;
 
 use Ailos\Sdk\Exceptions\AuthenticationException;
 
-class CallbackPayload
+final readonly class CallbackPayload
 {
     public function __construct(
-        private readonly string $code,
-        private readonly string $state = '',
+        private string $code,
+        private string $state = '',
     ) {
         $this->validate();
     }
 
-    public static function fromJson(string $json): static
+    public static function fromJson(string $json): self
     {
         $data = json_decode($json, associative: true);
 
@@ -25,28 +25,42 @@ class CallbackPayload
             );
         }
 
-        return static::fromArray($data);
+        /** @var array<string, mixed> $data */
+        return self::fromArray($data);
     }
 
-    public static function fromArray(array $data): static
+    /**
+     * @param array<string, mixed> $data
+     */
+    public static function fromArray(array $data): self
     {
-        return new static(
-            code:  $data['code']  ?? '',
-            state: $data['state'] ?? '',
+        $code = isset($data['code']) && is_string($data['code'])
+            ? $data['code']
+            : '';
+
+        $state = isset($data['state']) && is_string($data['state'])
+            ? $data['state']
+            : '';
+
+        return new self(
+            code: $code,
+            state: $state,
         );
     }
 
-    public static function fromGlobals(): static
+    public static function fromGlobals(): self
     {
         // Tenta ler do corpo JSON da requisição
         $body = file_get_contents('php://input');
 
         if (!empty($body)) {
-            return static::fromJson($body);
+            return self::fromJson($body);
         }
 
-        // Fallback para $_POST
-        return static::fromArray($_POST);
+        /** @var array<string, mixed> $post */
+        $post = $_POST;
+
+        return self::fromArray($post);
     }
 
     public function code(): string

@@ -2,20 +2,20 @@
 
 declare(strict_types=1);
 
-namespace Ailos\Sdk\Auth\Steps;
+namespace Ailos\Sdk\Collection\Auth\Endpoints;
 
-use Ailos\Sdk\Auth\Credentials\CooperadoCredentials;
-use Ailos\Sdk\Auth\Tokens\AccessToken;
-use Ailos\Sdk\Auth\Tokens\AuthId;
+use Ailos\Sdk\Collection\Auth\Credentials\CooperadoCredentials;
+use Ailos\Sdk\Collection\Auth\Tokens\AccessToken;
+use Ailos\Sdk\Collection\Auth\Tokens\AuthId;
 use Ailos\Sdk\Exceptions\AuthenticationException;
 use Ailos\Sdk\Http\Contracts\HttpClientInterface;
 use Ailos\Sdk\Http\Environment;
 
-class FetchAuthIdStep
+readonly class FetchAuthIdEndpoint
 {
     public function __construct(
-        private readonly HttpClientInterface $httpClient,
-        private readonly Environment $environment,
+        private HttpClientInterface $httpClient,
+        private Environment         $environment,
     ) {
     }
 
@@ -25,8 +25,8 @@ class FetchAuthIdStep
             $response = $this->httpClient->post(
                 url: $this->environment->authIdUrl(),
                 headers: [
-                    "Authorization: {$accessToken->bearerHeader()}",
-                    'Accept: text/plain',
+                    'Authorization' => $accessToken->bearerHeader(),
+                    'Accept' => 'text/plain',
                 ],
                 body: $credentials->toAuthIdPayload(),
             );
@@ -39,6 +39,9 @@ class FetchAuthIdStep
         return new AuthId($this->extractId($response));
     }
 
+    /**
+     * @param array<string, mixed> $response
+     */
     private function assertValidResponse(array $response): void
     {
         if (empty($this->extractId($response))) {
@@ -48,10 +51,19 @@ class FetchAuthIdStep
         }
     }
 
+    /**
+     * @param array<string, mixed> $response
+     */
     private function extractId(array $response): string
     {
-        // A API pode retornar o ID diretamente como string no campo 'raw'
-        // ou dentro de um campo 'id' dependendo do Content-Type da resposta
-        return (string) ($response['id'] ?? $response['raw'] ?? '');
+        if (isset($response['id']) && is_string($response['id'])) {
+            return $response['id'];
+        }
+
+        if (isset($response['raw']) && is_string($response['raw'])) {
+            return $response['raw'];
+        }
+
+        return '';
     }
 }

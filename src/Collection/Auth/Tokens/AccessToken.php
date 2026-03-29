@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Ailos\Sdk\Auth\Tokens;
+namespace Ailos\Sdk\Collection\Auth\Tokens;
 
 use DateTimeImmutable;
 

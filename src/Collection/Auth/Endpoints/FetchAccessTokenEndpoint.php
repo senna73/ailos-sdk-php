@@ -2,20 +2,20 @@
 
 declare(strict_types=1);
 
-namespace Ailos\Sdk\Auth\Steps;
+namespace Ailos\Sdk\Collection\Auth\Endpoints;
 
-use Ailos\Sdk\Auth\Credentials\ClientCredentials;
-use Ailos\Sdk\Auth\Tokens\AccessToken;
+use Ailos\Sdk\Collection\Auth\Credentials\ClientCredentials;
+use Ailos\Sdk\Collection\Auth\Tokens\AccessToken;
 use Ailos\Sdk\Exceptions\AuthenticationException;
 use Ailos\Sdk\Exceptions\InvalidCredentialsException;
 use Ailos\Sdk\Http\Contracts\HttpClientInterface;
 use Ailos\Sdk\Http\Environment;
 
-class FetchAccessTokenStep
+readonly class FetchAccessTokenEndpoint
 {
     public function __construct(
-        private readonly HttpClientInterface $httpClient,
-        private readonly Environment $environment,
+        private HttpClientInterface $httpClient,
+        private Environment         $environment,
     ) {
     }
 
@@ -25,8 +25,8 @@ class FetchAccessTokenStep
             $response = $this->httpClient->postUrlEncoded(
                 url: $this->environment->tokenUrl(),
                 headers: [
-                    "Authorization: {$credentials->basicAuthHeader()}",
-                    'Accept: application/json',
+                    'Authorization' => $credentials->basicAuthHeader(),
+                    'Content-Type' => 'application/x-www-form-urlencoded',
                 ],
                 body: 'grant_type=client_credentials',
             );
@@ -36,13 +36,26 @@ class FetchAccessTokenStep
 
         $this->assertValidResponse($response);
 
+        /** @var array<string, mixed> $response */
+
+        $accessToken = $response['access_token'] ?? null;
+        $expiresIn   = $response['expires_in'] ?? null;
+        $tokenType   = $response['token_type'] ?? null;
+
+        if (!is_string($accessToken) || !is_int($expiresIn) || !is_string($tokenType)) {
+            throw AuthenticationException::failedToFetchAccessToken('Invalid response structure.');
+        }
+
         return new AccessToken(
-            value: $response['access_token'],
-            expiresIn: (int) ($response['expires_in'] ?? 3600),
-            tokenType: (string) ($response['token_type'] ?? ''),
+            $accessToken,
+            $expiresIn,
+            $tokenType
         );
     }
 
+    /**
+     * @param array<string, mixed> $response
+     */
     private function assertValidResponse(array $response): void
     {
         if (($response['_status_code'] ?? 0) === 401) {

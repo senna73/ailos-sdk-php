@@ -5,8 +5,9 @@ declare(strict_types=1);
 namespace Ailos\Sdk\Tests\Integration;
 
 use Ailos\Sdk\AilosSdk;
-use Ailos\Sdk\Auth\Credentials\ClientCredentials;
-use Ailos\Sdk\Auth\Credentials\CooperadoCredentials;
+use Ailos\Sdk\Collection\Auth\Credentials\ClientCredentials;
+use Ailos\Sdk\Collection\Auth\Credentials\CooperadoCredentials;
+use Ailos\Sdk\Http\Environment;
 use Dotenv\Dotenv;
 use PHPUnit\Framework\TestCase;
 
@@ -75,7 +76,7 @@ abstract class IntegrationTestCase extends TestCase
                 codigoConta:          $_ENV['AILOS_CODIGO_CONTA'],
                 senha:                $_ENV['AILOS_SENHA'],
             ),
-            environment: $_ENV['AILOS_ENVIRONMENT'] ?? 'homologacao',
+            environment: new Environment($_ENV['AILOS_ENVIRONMENT'] ?? 'homologacao'),
         );
     }
 }

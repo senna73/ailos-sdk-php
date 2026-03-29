@@ -28,10 +28,12 @@ class FileTokenStore implements TokenStoreInterface
 
         $contents = file_get_contents($path);
 
-        return $contents !== false ? unserialize($contents) : null;
+        return $contents !== false
+            ? unserialize($contents, ['allowed_classes' => true])
+            : null;
     }
 
-    public function set(string $key, mixed $value, int $ttl = 0): void
+    public function set(string $key, mixed $value): void
     {
         $this->forget($key);
 
@@ -61,7 +63,13 @@ class FileTokenStore implements TokenStoreInterface
 
     public function clear(): void
     {
-        foreach (glob(self::STORE_PATH . '*') as $file) {
+        $files = glob(self::STORE_PATH . '*');
+
+        if ($files === false) {
+            return;
+        }
+
+        foreach ($files as $file) {
             if (is_file($file)) {
                 unlink($file);
             }

@@ -2,20 +2,20 @@
 
 declare(strict_types=1);
 
-namespace Ailos\Sdk\Auth\Steps;
+namespace Ailos\Sdk\Collection\Auth\Endpoints;
 
-use Ailos\Sdk\Auth\Credentials\CooperadoCredentials;
-use Ailos\Sdk\Auth\Tokens\AccessToken;
-use Ailos\Sdk\Auth\Tokens\AuthId;
+use Ailos\Sdk\Collection\Auth\Credentials\CooperadoCredentials;
+use Ailos\Sdk\Collection\Auth\Tokens\AccessToken;
+use Ailos\Sdk\Collection\Auth\Tokens\AuthId;
 use Ailos\Sdk\Exceptions\AuthenticationException;
 use Ailos\Sdk\Http\Contracts\HttpClientInterface;
 use Ailos\Sdk\Http\Environment;
 
-class AuthenticateCooperadoStep
+readonly class AuthenticateCooperadoEndpoint
 {
     public function __construct(
-        private readonly HttpClientInterface $httpClient,
-        private readonly Environment $environment,
+        private HttpClientInterface $httpClient,
+        private Environment         $environment,
     ) {
     }
 
@@ -28,7 +28,7 @@ class AuthenticateCooperadoStep
             $response = $this->httpClient->postForm(
                 url: $this->environment->loginUrl($authId->urlEncoded()),
                 headers: [
-                    "Authorization: {$accessToken->bearerHeader()}",
+                    'Authorization' => $accessToken->bearerHeader(),
                 ],
                 fields: $credentials->toLoginPayload(),
             );
@@ -39,10 +39,18 @@ class AuthenticateCooperadoStep
         $this->assertValidResponse($response);
     }
 
+    /**
+     * @param array<string, mixed> $response
+     */
     private function assertValidResponse(array $response): void
     {
-        $status = $response['_status_code'] ?? 0;
-        $body   = $response['raw'] ?? '';
+        $status = isset($response['_status_code']) && is_int($response['_status_code'])
+            ? $response['_status_code']
+            : 0;
+
+        $body = isset($response['raw']) && is_string($response['raw'])
+            ? $response['raw']
+            : '';
 
         $error = $this->extractHtmlError($body);
 
@@ -52,7 +60,7 @@ class AuthenticateCooperadoStep
 
         if ($status >= 400) {
             throw AuthenticationException::failedToAuthenticateCooperado(
-                "Unexpected response status: {$status}"
+                'Unexpected response status: ' . (string) $status
             );
         }
     }
@@ -72,10 +80,16 @@ class AuthenticateCooperadoStep
 
         $nodes = $xpath->query("//div[contains(@class,'validation-summary-errors')]//li");
 
-        if ($nodes->length === 0) {
+        if ($nodes === false || $nodes->length === 0) {
             return null;
         }
 
-        return trim($nodes->item(0)->textContent);
+        $node = $nodes->item(0);
+
+        if (!$node instanceof \DOMNode) {
+            return null;
+        }
+
+        return trim($node->textContent);
     }
 }

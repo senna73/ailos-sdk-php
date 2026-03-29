@@ -48,6 +48,11 @@ class Environment
         return $this->baseUrl() . "/ailos/identity/api/v1/autenticacao/token/refresh?code={$encodedJwt}";
     }
 
+    public function cadastrarPagadorUrl(): string
+    {
+        return $this->baseUrl() . '/ailos/cobranca/api/v1/pagadores/cadastrar';
+    }
+
     public function isProduction(): bool
     {
         return $this->environment === 'producao';

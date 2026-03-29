@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Ailos\Sdk\Auth\Credentials;
+namespace Ailos\Sdk\Collection\Auth\Credentials;
 
 use Ailos\Sdk\Exceptions\InvalidCredentialsException;
 
@@ -49,6 +49,9 @@ class CooperadoCredentials
         return $this->state;
     }
 
+    /**
+     * @return array<string, string>
+     */
     public function toLoginPayload(): array
     {
         return [
@@ -58,6 +61,9 @@ class CooperadoCredentials
         ];
     }
 
+    /**
+     * @return array<string, string>
+     */
     public function toAuthIdPayload(): array
     {
         return [

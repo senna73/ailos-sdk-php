@@ -4,117 +4,32 @@ declare(strict_types=1);
 
 namespace Ailos\Sdk;
 
-use Ailos\Sdk\Auth\AuthOrchestrator;
-use Ailos\Sdk\Auth\Callback\CallbackHandler;
-use Ailos\Sdk\Auth\Credentials\ClientCredentials;
-use Ailos\Sdk\Auth\Credentials\CooperadoCredentials;
-use Ailos\Sdk\Auth\Steps\AuthenticateCooperadoStep;
-use Ailos\Sdk\Auth\Steps\FetchAccessTokenStep;
-use Ailos\Sdk\Auth\Steps\FetchAuthIdStep;
-use Ailos\Sdk\Auth\TokenRefresher;
-use Ailos\Sdk\Auth\Tokens\JwtToken;
-use Ailos\Sdk\Exceptions\AuthenticationException;
+use Ailos\Sdk\Collection\Auth\AuthOrchestrator;
+use Ailos\Sdk\Collection\Auth\Credentials\ClientCredentials;
+use Ailos\Sdk\Collection\Auth\Credentials\CooperadoCredentials;
 use Ailos\Sdk\Http\AilosHttpClient;
 use Ailos\Sdk\Http\Contracts\HttpClientInterface;
 use Ailos\Sdk\Http\Environment;
 use Ailos\Sdk\Storage\Contracts\TokenStoreInterface;
 use Ailos\Sdk\Storage\FileTokenStore;
 
-class AilosSdk
+readonly class AilosSdk
 {
-    private readonly AuthOrchestrator  $orchestrator;
-    private readonly TokenRefresher    $tokenRefresher;
-    private readonly TokenStoreInterface $tokenStore;
+    public AuthOrchestrator $auth;
 
     public function __construct(
-        private readonly ClientCredentials    $clientCredentials,
-        private readonly CooperadoCredentials $cooperadoCredentials,
-        string                                $environment = 'homologacao',
-        ?HttpClientInterface                  $httpClient = null,
-        ?TokenStoreInterface                  $tokenStore = null,
+        private ClientCredentials    $clientCredentials,
+        private CooperadoCredentials $cooperadoCredentials,
+        private Environment          $environment = new Environment('homologacao'),
+        private HttpClientInterface $httpClient = new AilosHttpClient(),
+        private TokenStoreInterface $tokenStore = new FileTokenStore(),
     ) {
-        $env        = new Environment($environment);
-        $http       = $httpClient ?? new AilosHttpClient();
-        $this->tokenStore = $tokenStore ?? new FileTokenStore();
-
-        $fetchAccessTokenStep      = new FetchAccessTokenStep($http, $env);
-        $fetchAuthIdStep           = new FetchAuthIdStep($http, $env);
-        $authenticateCooperadoStep = new AuthenticateCooperadoStep($http, $env);
-
-        $this->orchestrator = new AuthOrchestrator(
-            fetchAccessTokenStep:      $fetchAccessTokenStep,
-            fetchAuthIdStep:           $fetchAuthIdStep,
-            authenticateCooperadoStep: $authenticateCooperadoStep,
-            tokenStore:                $this->tokenStore,
-        );
-
-        $this->tokenRefresher = new TokenRefresher(
-            tokenStore:   $this->tokenStore,
-            orchestrator: $this->orchestrator,
-        );
-    }
-
-    /**
-     * Inicia o fluxo completo de autenticação (Etapas 1, 2 e 3).
-     * O JWT será enviado pela Ailos para a urlCallback configurada.
-     * Após receber o JWT no callback, chame handleCallback() para armazená-lo.
-     */
-    public function authenticate(): void
-    {
-        $this->orchestrator->run(
-            clientCredentials:    $this->clientCredentials,
+        $this->auth = new AuthOrchestrator(
+            clientCredentials: $this->clientCredentials,
             cooperadoCredentials: $this->cooperadoCredentials,
+            environment: $this->environment,
+            httpClient: $this->httpClient,
+            tokenStore: $this->tokenStore
         );
-    }
-
-    /**
-     * Retorna um handler pronto para processar o endpoint de callback.
-     */
-    public function callbackHandler(): CallbackHandler
-    {
-        return new CallbackHandler($this->tokenStore);
-    }
-
-    /**
-     * Retorna um JWT válido — renova automaticamente se necessário.
-     * Lança AuthenticationException se authenticate() nunca foi chamado.
-     */
-    public function getJwt(): JwtToken
-    {
-        return $this->tokenRefresher->getValidJwt(
-            clientCredentials:    $this->clientCredentials,
-            cooperadoCredentials: $this->cooperadoCredentials,
-        );
-    }
-
-    /**
-     * Retorna o valor string do JWT pronto para uso em headers.
-     * Atalho conveniente para $sdk->getJwt()->value()
-     */
-    public function getJwtValue(): string
-    {
-        return $this->getJwt()->value();
-    }
-
-    /**
-     * Verifica se há um JWT armazenado e válido disponível.
-     */
-    public function isAuthenticated(): bool
-    {
-        try {
-            $jwt = $this->getJwt();
-            return !$jwt->isExpired();
-        } catch (AuthenticationException) {
-            return false;
-        }
-    }
-
-    /**
-     * Limpa todos os tokens armazenados.
-     * Force um novo ciclo completo de autenticação.
-     */
-    public function logout(): void
-    {
-        $this->tokenStore->clear();
     }
 }

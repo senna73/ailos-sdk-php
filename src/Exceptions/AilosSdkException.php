@@ -8,8 +8,8 @@ use RuntimeException;
 
 class AilosSdkException extends RuntimeException
 {
-    public static function withMessage(string $message, int $code = 0): static
+    public static function withMessage(string $message, int $code = 0): self
     {
-        return new static($message, $code);
+        return new self($message, $code);
     }
 }

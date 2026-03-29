@@ -5,8 +5,9 @@ declare(strict_types=1);
 require_once __DIR__ . '/../../../vendor/autoload.php';
 
 use Ailos\Sdk\AilosSdk;
-use Ailos\Sdk\Auth\Credentials\ClientCredentials;
-use Ailos\Sdk\Auth\Credentials\CooperadoCredentials;
+use Ailos\Sdk\Collection\Auth\Credentials\ClientCredentials;
+use Ailos\Sdk\Collection\Auth\Credentials\CooperadoCredentials;
+use Ailos\Sdk\Http\Environment;
 
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../../../');
 $dotenv->load();
@@ -32,7 +33,7 @@ $sdk = new AilosSdk(
         codigoConta:          $_ENV['AILOS_CODIGO_CONTA'],
         senha:                $_ENV['AILOS_SENHA'],
     ),
-    environment: $_ENV['AILOS_ENVIRONMENT'] ?? 'homologacao',
+    environment: new Environment($_ENV['AILOS_ENVIRONMENT'] ?? 'homologacao'),
 );
 
 $method = $_SERVER['REQUEST_METHOD'];
@@ -40,7 +41,7 @@ $path   = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
 if ($method === 'POST' && $path === '/callback') {
     try {
-        $sdk->callbackHandler()->handleFromGlobals();
+        $sdk->auth->callbackHandler()->handleFromGlobals();
 
         http_response_code(200);
         header('Content-Type: application/json');
