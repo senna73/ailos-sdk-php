@@ -98,13 +98,18 @@ class AilosHttpClient implements HttpClientInterface
             array_values($headers),
         );
 
-        curl_setopt_array($curl, [
+        $options = [
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_TIMEOUT        => self::TIMEOUT_SECONDS,
             CURLOPT_HTTPHEADER     => $normalizedHeaders,
             CURLOPT_FOLLOWLOCATION => true,
-            ...$curlOptions,
-        ]);
+        ];
+
+        foreach ($curlOptions as $key => $value) {
+            $options[$key] = $value;
+        }
+
+        curl_setopt_array($curl, $options);
 
         return $curl;
     }

@@ -7,6 +7,7 @@ namespace Ailos\Sdk;
 use Ailos\Sdk\Collection\Auth\AuthOrchestrator;
 use Ailos\Sdk\Collection\Auth\Credentials\ClientCredentials;
 use Ailos\Sdk\Collection\Auth\Credentials\CooperadoCredentials;
+use Ailos\Sdk\Collection\Payers\PayerOrchestrator;
 use Ailos\Sdk\Http\AilosHttpClient;
 use Ailos\Sdk\Http\Contracts\HttpClientInterface;
 use Ailos\Sdk\Http\Environment;
@@ -15,7 +16,7 @@ use Ailos\Sdk\Storage\FileTokenStore;
 
 readonly class AilosSdk
 {
-    public AuthOrchestrator $auth;
+    private AuthOrchestrator $authOrchestrator;
 
     public function __construct(
         private ClientCredentials    $clientCredentials,
@@ -24,12 +25,26 @@ readonly class AilosSdk
         private HttpClientInterface $httpClient = new AilosHttpClient(),
         private TokenStoreInterface $tokenStore = new FileTokenStore(),
     ) {
-        $this->auth = new AuthOrchestrator(
+        $this->authOrchestrator = new AuthOrchestrator(
             clientCredentials: $this->clientCredentials,
             cooperadoCredentials: $this->cooperadoCredentials,
             environment: $this->environment,
             httpClient: $this->httpClient,
             tokenStore: $this->tokenStore
+        );
+    }
+
+    public function auth(): AuthOrchestrator
+    {
+        return $this->authOrchestrator;
+    }
+
+    public function payer(): PayerOrchestrator
+    {
+        return new PayerOrchestrator(
+            environment: $this->environment,
+            httpClient: $this->httpClient,
+            authOrchestrator: $this->authOrchestrator
         );
     }
 }

@@ -41,7 +41,7 @@ $path   = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
 if ($method === 'POST' && $path === '/callback') {
     try {
-        $sdk->auth->callbackHandler()->handleFromGlobals();
+        $sdk->auth()->callbackHandler()->handleFromGlobals();
 
         http_response_code(200);
         header('Content-Type: application/json');

@@ -35,16 +35,11 @@ readonly class AuthOrchestrator
      * O JWT será enviado pela Ailos para a urlCallback configurada.
      * Após receber o JWT no callback, chame handleCallback() para armazená-lo.
      */
-    public function authenticate(): object
+    public function authenticate(): void
     {
         $accessToken = $this->accessToken();
         $authId = $this->authId($accessToken);
-        $jwt = $this->jwt($accessToken, $authId);
-
-        return (object) [
-            'access_token' => $accessToken,
-            'jwt' => $jwt,
-        ];
+        $this->jwt($accessToken, $authId);
     }
 
     public function accessToken(): AccessToken
@@ -112,6 +107,38 @@ readonly class AuthOrchestrator
     public function callbackHandler(): CallbackHandler
     {
         return new CallbackHandler($this->tokenStore);
+    }
+
+    public function getJwtToken(): string
+    {
+        $jwt = $this->tokenStore->get(TokenKeys::JWT);
+
+        if (!$jwt instanceof JwtToken || $jwt->isExpired()) {
+            $this->authenticate();
+            $jwt = $this->tokenStore->get(TokenKeys::JWT);
+        }
+
+        if (!$jwt instanceof JwtToken) {
+            throw new \RuntimeException('JWT token not available after authentication.');
+        }
+
+        return $jwt->value();
+    }
+
+    public function getAccessToken(): string
+    {
+        $accessToken = $this->tokenStore->get(TokenKeys::ACCESS_TOKEN);
+
+        if (!$accessToken instanceof AccessToken || $accessToken->isExpired()) {
+            $this->authenticate();
+            $accessToken = $this->tokenStore->get(TokenKeys::ACCESS_TOKEN);
+        }
+
+        if (!$accessToken instanceof AccessToken) {
+            throw new \RuntimeException('Access token not available after authentication.');
+        }
+
+        return $accessToken->value();
     }
 
 }
