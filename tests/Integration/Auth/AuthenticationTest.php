@@ -42,7 +42,7 @@ class AuthenticationTest extends IntegrationTestCase
             dda: true,
         );
 
-        $this->sdk->payer()->registerPayer($pagador);
+        $this->sdk->pagador()->registrarPagador($pagador);
         self::assertTrue(true);
     }
 }

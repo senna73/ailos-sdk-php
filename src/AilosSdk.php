@@ -39,7 +39,7 @@ readonly class AilosSdk
         return $this->authOrchestrator;
     }
 
-    public function payer(): PayerOrchestrator
+    public function pagador(): PayerOrchestrator
     {
         return new PayerOrchestrator(
             environment: $this->environment,

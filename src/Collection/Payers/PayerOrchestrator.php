@@ -19,7 +19,7 @@ readonly class PayerOrchestrator
     ) {
     }
 
-    public function registerPayer(Pagador $pagador): void
+    public function registrarPagador(Pagador $pagador): void
     {
         new RegisterPayerEndpoint(
             httpClient: $this->httpClient,
