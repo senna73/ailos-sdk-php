@@ -2,29 +2,27 @@
 
 declare(strict_types=1);
 
-namespace Ailos\Sdk\Tests\Integration\Collections;
+namespace Ailos\Sdk\Tests;
 
-use Ailos\Sdk\Entities\EnviromentEntity;
-use Ailos\Sdk\Framework\AuthManager;
-use Ailos\Sdk\Framework\HttpClient;
+use Ailos\Sdk\Entities\Enviroment;
 use Dotenv\Dotenv;
 use Dotenv\Repository\RepositoryBuilder;
 use PHPUnit\Framework\TestCase;
 
-class AuthManagerTest extends TestCase
+abstract class IntegrationTestCase extends TestCase
 {
-    private AuthManager $authManager;
+    protected static Enviroment $enviroment;
 
-    protected function setUp(): void
+    public static function setUpBeforeClass(): void
     {
-        parent::setUp();
+        parent::setUpBeforeClass();
 
         $repository = RepositoryBuilder::createWithDefaultAdapters()->make();
 
-        $dotenv = Dotenv::create($repository, __DIR__ . '/../../..', '.env');
+        $dotenv = Dotenv::create($repository, PROJECT_ROOT, '.env');
         $dotenv->safeLoad();
 
-        $enviroment = new EnviromentEntity(
+        self::$enviroment = new Enviroment(
             (string) ($repository->get('AILOS_CONSUMER_KEY') ?? ''),
             (string) ($repository->get('AILOS_CONSUMER_SECRET') ?? ''),
             (string) ($repository->get('AILOS_URL_CALLBACK') ?? ''),
@@ -34,18 +32,8 @@ class AuthManagerTest extends TestCase
             (string) ($repository->get('AILOS_SENHA') ?? ''),
         );
 
-        if ($enviroment->ambiente != 'homol') {
+        if (self::$enviroment->ambiente != 'homol') {
             throw new \Exception('Ambiente invalido para testes');
         }
-
-        $this->authManager = new AuthManager($enviroment, new HttpClient());
-    }
-
-    public function testAuthManager(): void
-    {
-        $this->authManager->auth();
-
-        $this->assertNotNull($this->authManager->accessToken);
-        $this->assertNotNull($this->authManager->id);
     }
 }

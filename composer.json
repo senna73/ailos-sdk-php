@@ -29,7 +29,11 @@
             "Ailos\\Sdk\\": "src/"
         }
     },
-
+    "autoload-dev": {
+        "psr-4": {
+            "Ailos\\Sdk\\Tests\\": "tests/"
+        }
+    },
     "scripts": {
         "lint": "find src -type f -name '*.php' -print0 | xargs -0 -n1 php -l",
         "test:integration": "vendor/bin/phpunit -c phpunit.xml --testsuite Integration",
