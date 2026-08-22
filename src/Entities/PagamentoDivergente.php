@@ -6,7 +6,7 @@ namespace Ailos\Sdk\Entities;
 
 use Ailos\Sdk\Framework\Entity;
 
-class PagamentoDivergenteEntity extends Entity
+class PagamentoDivergente extends Entity
 {
     public function __construct(
         public readonly int $tipoPagamentoDivergente,

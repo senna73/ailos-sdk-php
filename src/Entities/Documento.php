@@ -6,7 +6,7 @@ namespace Ailos\Sdk\Entities;
 
 use Ailos\Sdk\Framework\Entity;
 
-class DocumentoEntity extends Entity
+class Documento extends Entity
 {
     public function __construct(
         public readonly int $numeroDocumento,

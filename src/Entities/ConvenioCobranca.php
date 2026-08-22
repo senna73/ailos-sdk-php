@@ -6,7 +6,7 @@ namespace Ailos\Sdk\Entities;
 
 use Ailos\Sdk\Framework\Entity;
 
-class ConvenioCobrancaEntity extends Entity
+class ConvenioCobranca extends Entity
 {
     public function __construct(
         public readonly int $codigoCarteiraCobranca

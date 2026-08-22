@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Ailos\Sdk\Framework;
 
-use Ailos\Sdk\Entities\AccessTokenEntity;
-use Ailos\Sdk\Entities\EnviromentEntity;
-use Ailos\Sdk\Entities\JwtEntity;
+use Ailos\Sdk\Entities\AccessToken;
+use Ailos\Sdk\Entities\Enviroment;
+use Ailos\Sdk\Entities\Jwt;
 use DomainException;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Contracts\Cache\ItemInterface;
@@ -15,14 +15,14 @@ final class AuthManager
 {
     private FilesystemAdapter $storage;
 
-    public ?AccessTokenEntity $accessToken;
+    public ?AccessToken $accessToken;
 
     public ?string $id;
 
-    public ?JwtEntity $jwt;
+    public ?Jwt $jwt;
 
     public function __construct(
-        private EnviromentEntity $enviroment,
+        private Enviroment $enviroment,
         private HttpClient $httpClient
     ) {
         $this->storage = Storage::storage();
@@ -32,7 +32,7 @@ final class AuthManager
     {
         $this->accessToken = $this->storage->get(
             'access_token',
-            function (ItemInterface $item): AccessTokenEntity {
+            function (ItemInterface $item): AccessToken {
                 $accessToken = $this->requestAccessToken();
                 $item->expiresAfter($accessToken->expiresIn);
                 return $accessToken;
@@ -58,7 +58,7 @@ final class AuthManager
             if ($item->isHit()) {
                 $item = $item->get();
 
-                if (!($item instanceof JwtEntity)) {
+                if (!($item instanceof Jwt)) {
                     throw new \RuntimeException('Item obtido com tipagem errada');
                 }
 
@@ -75,7 +75,7 @@ final class AuthManager
         }
     }
 
-    private function requestAccessToken(): AccessTokenEntity
+    private function requestAccessToken(): AccessToken
     {
         $response = $this->httpClient->post(
             $this->enviroment->baseUrl . '/token',
@@ -94,7 +94,7 @@ final class AuthManager
             throw new DomainException('Tipo de retorno incorreto');
         }
 
-        return AccessTokenEntity::fromObject($response);
+        return AccessToken::fromObject($response);
     }
 
     private function requestId(): string
@@ -188,5 +188,16 @@ final class AuthManager
             'x-ailos-authentication' => $this->jwt->code,
             'Authorization' => $this->accessToken->tokenType . ' ' . $this->accessToken->accessToken,
         ];
+    }
+
+    public function logout(): void
+    {
+        $this->storage->deleteItem('access_token');
+        $this->storage->deleteItem('id');
+        $this->storage->deleteItem('jwt');
+
+        $this->accessToken = null;
+        $this->id = null;
+        $this->jwt = null;
     }
 }

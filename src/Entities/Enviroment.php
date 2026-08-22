@@ -7,7 +7,7 @@ namespace Ailos\Sdk\Entities;
 use Ailos\Sdk\Framework\Entity;
 use InvalidArgumentException;
 
-class EnviromentEntity extends Entity
+class Enviroment extends Entity
 {
     private const array URLS = [
         'homol' => 'https://apiendpointhml.ailos.coop.br',

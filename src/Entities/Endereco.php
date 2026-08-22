@@ -6,7 +6,7 @@ namespace Ailos\Sdk\Entities;
 
 use Ailos\Sdk\Framework\Entity;
 
-class EnderecoEntity extends Entity
+class Endereco extends Entity
 {
     public function __construct(
         public readonly string $cep,

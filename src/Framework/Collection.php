@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace Ailos\Sdk\Framework;
 
-use Ailos\Sdk\Entities\EnviromentEntity;
+use Ailos\Sdk\Entities\Enviroment;
 
 abstract readonly class Collection
 {
     private HttpClient $httpClient;
     private AuthManager $authManager;
 
-    public function __construct(private EnviromentEntity $enviroment)
+    public function __construct(private Enviroment $enviroment)
     {
         $this->httpClient = new HttpClient();
         $this->authManager = new AuthManager($this->enviroment, $this->httpClient);

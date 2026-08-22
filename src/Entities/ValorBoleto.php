@@ -6,10 +6,10 @@ namespace Ailos\Sdk\Entities;
 
 use Ailos\Sdk\Framework\Entity;
 
-class VencimentoEntity extends Entity
+class ValorBoleto extends Entity
 {
     public function __construct(
-        public readonly string $dataVencimento
+        public readonly int $valorNominal
     ) {
     }
 }

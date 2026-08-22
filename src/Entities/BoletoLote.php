@@ -6,13 +6,13 @@ namespace Ailos\Sdk\Entities;
 
 use Ailos\Sdk\Framework\Entity;
 
-class BoletoLoteEntity extends Entity
+class BoletoLote extends Entity
 {
     /**
-     * @param BoletoEntity[] $boletos
+     * @param Boleto[] $boletos
      */
     public function __construct(
-        public readonly ConvenioCobrancaEntity $convenioCobranca,
+        public readonly ConvenioCobranca $convenioCobranca,
         public readonly array $boletos,
     ) {
     }

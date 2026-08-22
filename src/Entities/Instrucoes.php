@@ -6,7 +6,7 @@ namespace Ailos\Sdk\Entities;
 
 use Ailos\Sdk\Framework\Entity;
 
-class InstrucoesEntity extends Entity
+class Instrucoes extends Entity
 {
     /**
      * @param list<array{valor: float, diasAteVencimento: int}> $descontos

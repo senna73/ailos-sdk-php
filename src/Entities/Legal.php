@@ -6,7 +6,7 @@ namespace Ailos\Sdk\Entities;
 
 use Ailos\Sdk\Framework\Entity;
 
-class LegalEntity extends Entity
+class Legal extends Entity
 {
     public function __construct(
         public readonly string $identificadorReceitaFederal,
