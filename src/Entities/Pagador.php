@@ -13,7 +13,7 @@ class Pagador extends Entity
      * @param list<string> $mensagemPagador
      */
     public function __construct(
-        public readonly Legal $entidadeLegal,
+        public readonly EntidadeLegal $entidadeLegal,
         public readonly Telefone $telefone,
         public readonly array $emails,
         public readonly Endereco $endereco,

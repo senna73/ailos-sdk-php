@@ -7,72 +7,86 @@ namespace Ailos\Sdk\Framework;
 use Ailos\Sdk\Entities\AccessToken;
 use Ailos\Sdk\Entities\Enviroment;
 use Ailos\Sdk\Entities\Jwt;
+use Ailos\Sdk\Framework\Storage\IStorage;
 use DomainException;
-use Symfony\Component\Cache\Adapter\FilesystemAdapter;
-use Symfony\Contracts\Cache\ItemInterface;
 
 final class AuthManager
 {
-    private FilesystemAdapter $storage;
+    private ?AccessToken $accessToken;
 
-    public ?AccessToken $accessToken;
+    private ?string $id;
 
-    public ?string $id;
-
-    public ?Jwt $jwt;
+    private ?Jwt $jwt;
 
     public function __construct(
         private Enviroment $enviroment,
-        private HttpClient $httpClient
+        private HttpClient $httpClient,
+        private IStorage $storage
     ) {
-        $this->storage = Storage::storage();
+        $this->accessToken = $storage->get('access_token');
+        $this->id = $storage->get('id');
+        $this->jwt = $storage->get('jwt');
     }
 
     public function auth(): void
     {
-        $this->accessToken = $this->storage->get(
-            'access_token',
-            function (ItemInterface $item): AccessToken {
-                $accessToken = $this->requestAccessToken();
-                $item->expiresAfter($accessToken->expiresIn);
-                return $accessToken;
-            }
-        );
+        if ($this->accessToken === null || !$this->accessToken->isValid()) {
+            $this->accessToken = $this->requestAccessToken();
 
-        $this->id = $this->storage->get(
-            'id',
-            function (ItemInterface $item) {
-                $id = $this->requestId();
-                $item->expiresAfter(3600);
-                return $id;
-            }
-        );
-
-        $this->requestJwt();
-
-        $startTime = microtime(true);
-
-        while (true) {
-            $item = $this->storage->getItem('jwt');
-
-            if ($item->isHit()) {
-                $item = $item->get();
-
-                if (!($item instanceof Jwt)) {
-                    throw new \RuntimeException('Item obtido com tipagem errada');
-                }
-
-                $this->jwt = $item;
-                return;
-            }
-
-            if ((microtime(true) - $startTime) >= 30) {
-                return;
-                // throw new \RuntimeException('Timeout JWT search.');
-            }
-
-            usleep(200000);
+            $this->storage->set(
+                'access_token',
+                $this->accessToken,
+                $this->accessToken->expiresIn
+            );
         }
+
+        if ($this->id === null) {
+            $this->id = $this->requestId();
+            
+            $this->storage->set(
+                'id',
+                $this->id,
+                3600
+            );
+        }
+
+        /**
+         * Não armazenamos o JWT aqui pois ele chega em outra requisição,
+         * apenas aguardamos ele chegar no storage para usarmos
+         */
+        if ($this->jwt === null) {
+            $this->requestJwt();
+    
+            $startTime = microtime(true);
+    
+            while (true) {
+                $this->jwt = $this->storage->get('jwt');
+    
+                if ($this->jwt != null) {
+                    return;
+                }
+    
+                if ((microtime(true) - $startTime) >= 30) {
+                    return;
+                    // throw new \RuntimeException('Timeout JWT search.');
+                }
+    
+                usleep(200000);
+            }
+        }
+
+        // JWT pode existir mas estar invalido, então vamos fazer refresh
+        if (!$this->jwt->isValid()) {
+            $jwt = $this->requestJwtRefresh();
+
+            $this->storage->set(
+                'jwt',
+                $jwt,
+                3600
+            );
+        }
+
+        return;
     }
 
     private function requestAccessToken(): AccessToken
@@ -168,6 +182,18 @@ final class AuthManager
         }
     }
 
+    private function requestJwtRefresh(): Jwt
+    {
+        $response = $this->httpClient->get(
+            $this->enviroment->baseUrl . "/ailos/identity/api/v1/autenticacao/token/refresh?code={$this->jwt->code}",
+            [
+                'Authorization' => 'Bearer ' . $this->accessToken->accessToken,
+            ]
+        );
+
+        return new Jwt($this->jwt->state, $response);
+    }
+
     /**
      * @return array{
      *  x-ailos-authentication: string,
@@ -192,9 +218,9 @@ final class AuthManager
 
     public function logout(): void
     {
-        $this->storage->deleteItem('access_token');
-        $this->storage->deleteItem('id');
-        $this->storage->deleteItem('jwt');
+        $this->storage->delete('access_token');
+        $this->storage->delete('id');
+        $this->storage->delete('jwt');
 
         $this->accessToken = null;
         $this->id = null;

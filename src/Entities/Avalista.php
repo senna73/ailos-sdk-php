@@ -9,7 +9,7 @@ use Ailos\Sdk\Framework\Entity;
 class Avalista extends Entity
 {
     public function __construct(
-        public readonly Legal $entidadeLegal
+        public readonly EntidadeLegal $entidadeLegal
     ) {
     }
 }
