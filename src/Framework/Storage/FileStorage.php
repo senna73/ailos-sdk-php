@@ -14,7 +14,7 @@ final class FileStorage implements IStorage
     ) {}
 
     #[Override]
-    public function get(string $key): ?mixed
+    public function get(string $key): mixed
     {
         $item = $this->storage->getItem($key);
 

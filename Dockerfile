@@ -34,4 +34,4 @@ RUN composer install --no-interaction --no-progress --prefer-dist
 # Agora copia o restante do código
 COPY . .
 
-CMD ["php", "-a"]
+CMD php -S 0.0.0.0:80 -t /app/public /app/public/router.php & tail -f /dev/null

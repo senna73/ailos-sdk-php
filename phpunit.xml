@@ -2,28 +2,14 @@
 <phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:noNamespaceSchemaLocation="vendor/phpunit/phpunit/phpunit.xsd"
          bootstrap="tests/bootstrap.php"
-         colors="true"
-         stopOnFailure="false"
-         failOnEmptyTestSuite="false"
->
-    <php>
-        <ini name="memory_limit" value="512M"/>
-    </php>
+         colors="true">
+
     <testsuites>
+        <testsuite name="Unit">
+            <directory>tests/Unit</directory>
+        </testsuite>
         <testsuite name="Integration">
             <directory>tests/Integration</directory>
         </testsuite>
     </testsuites>
-
-    <source>
-        <include>
-            <directory>src</directory>
-        </include>
-    </source>
-
-    <coverage>
-        <report>
-            <html outputDirectory="coverage"/>
-        </report>
-    </coverage>
 </phpunit>

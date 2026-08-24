@@ -9,3 +9,21 @@ services:
     stdin_open: true
     extra_hosts:
       - "host.docker.internal:host-gateway"
+    healthcheck:
+      test: ["CMD-SHELL", "bash -c '</dev/tcp/localhost/80' || exit 1"]
+      interval: 1s
+      timeout: 2s
+      retries: 10
+
+  webhook-tunnel:
+    image: ngrok/ngrok:latest
+    command: http app:80 --log stdout
+    environment:
+      - NGROK_AUTHTOKEN=${NGROK_AUTHTOKEN}
+    ports:
+      - "4040:4040" # API local do ngrok, pra consultar a URL pública
+    depends_on:
+      app:
+        condition: service_healthy
+    networks:
+      - default
