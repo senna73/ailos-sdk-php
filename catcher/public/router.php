@@ -12,25 +12,24 @@ $secret = getenv('CATCHER_SECRET') ?: '';
 
 header('Content-Type: application/json');
 
-// Ailos chama aqui — POST com {"state": "...", "code": "..."}
 if ($path === '/callback' && $method === 'POST') {
     $rawBody = file_get_contents('php://input');
     $data = json_decode($rawBody, true);
 
-    if (json_last_error() !== JSON_ERROR_NONE || !isset($data['state'], $data['code'])) {
+    // só usamos 'state' pra saber ONDE guardar, não mexemos no conteúdo
+    if (json_last_error() !== JSON_ERROR_NONE || !isset($data['state'])) {
         http_response_code(422);
         echo json_encode(['error' => 'malformed_payload']);
         return true;
     }
 
-    Store::put($data['state'], json_encode(['jwt' => $data['code']]));
+    Store::put($data['state'], $rawBody);
 
     http_response_code(200);
     echo json_encode(['status' => 'ok']);
     return true;
 }
 
-// Seus testes consultam aqui, passando o mesmo 'state' que geraram
 if ($path === '/events' && $method === 'GET') {
     $provided = $_SERVER['HTTP_X_CATCHER_SECRET'] ?? '';
     if (!hash_equals($secret, $provided)) {
