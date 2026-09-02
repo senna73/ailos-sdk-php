@@ -12,21 +12,25 @@ $secret = getenv('CATCHER_SECRET') ?: '';
 
 header('Content-Type: application/json');
 
+// Ailos chama aqui — POST com {"state": "...", "code": "..."}
 if ($path === '/callback' && $method === 'POST') {
-    $correlationId = $_GET['correlation_id'] ?? null;
-    if (!$correlationId) {
-        http_response_code(400);
-        echo json_encode(['error' => 'missing_correlation_id']);
+    $rawBody = file_get_contents('php://input');
+    $data = json_decode($rawBody, true);
+
+    if (json_last_error() !== JSON_ERROR_NONE || !isset($data['state'], $data['code'])) {
+        http_response_code(422);
+        echo json_encode(['error' => 'malformed_payload']);
         return true;
     }
 
-    Store::put($correlationId, file_get_contents('php://input'));
+    Store::put($data['state'], json_encode(['jwt' => $data['code']]));
 
     http_response_code(200);
     echo json_encode(['status' => 'ok']);
     return true;
 }
 
+// Seus testes consultam aqui, passando o mesmo 'state' que geraram
 if ($path === '/events' && $method === 'GET') {
     $provided = $_SERVER['HTTP_X_CATCHER_SECRET'] ?? '';
     if (!hash_equals($secret, $provided)) {
@@ -35,8 +39,8 @@ if ($path === '/events' && $method === 'GET') {
         return true;
     }
 
-    $correlationId = $_GET['correlation_id'] ?? null;
-    $payload = $correlationId ? Store::get($correlationId) : null;
+    $state = $_GET['state'] ?? null;
+    $payload = $state ? Store::get($state) : null;
 
     if ($payload === null) {
         http_response_code(404);
@@ -44,7 +48,7 @@ if ($path === '/events' && $method === 'GET') {
         return true;
     }
 
-    Store::delete($correlationId); // consome uma vez só, evita leitura de dado velho
+    Store::delete($state);
     echo $payload;
     return true;
 }
