@@ -1,0 +1,25 @@
+services:
+  catcher:
+    build: .
+    environment:
+      - CATCHER_SECRET=${CATCHER_SECRET}
+    restart: unless-stopped
+
+  caddy:
+    image: caddy:2-alpine
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      - CATCHER_DOMAIN=${CATCHER_DOMAIN}
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - catcher
+    restart: unless-stopped
+
+volumes:
+  caddy_data:
+  caddy_config:

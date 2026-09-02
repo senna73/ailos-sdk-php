@@ -1,0 +1,3 @@
+{$CATCHER_DOMAIN} {
+    reverse_proxy catcher:80
+}
