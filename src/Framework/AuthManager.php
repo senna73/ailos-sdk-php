@@ -203,7 +203,7 @@ final class AuthManager
             $this->enviroment->baseUrl . '/ailos/identity/api/v1/login/index?id=' . rawurlencode($id),
             [
                 'Authorization' => 'Bearer ' . $accessToken->accessToken,
-                'Content-Type' => 'application/x-www-form-urlencoded'
+                'Content-Type' => 'application/x-www-form-urlencoded',
             ],
             [
                 'Login.CodigoCooperativa' => $this->enviroment->codigoCooperativa,
@@ -211,7 +211,7 @@ final class AuthManager
                 'Login.Senha' => $this->enviroment->senha,
             ]
         );
-                
+
         if (!is_string($response)) {
             throw new DomainException('Tipo de retorno incorreto');
         }
