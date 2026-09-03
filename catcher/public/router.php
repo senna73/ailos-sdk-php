@@ -16,7 +16,6 @@ if ($path === '/callback' && $method === 'POST') {
     $rawBody = file_get_contents('php://input');
     $data = json_decode($rawBody, true);
 
-    // só usamos 'state' pra saber ONDE guardar, não mexemos no conteúdo
     if (json_last_error() !== JSON_ERROR_NONE || !isset($data['state'])) {
         http_response_code(422);
         echo json_encode(['error' => 'malformed_payload']);
