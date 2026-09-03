@@ -34,4 +34,6 @@ jobs:
           AILOS_CODIGO_COOPERATIVA: ${{ secrets.AILOS_CODIGO_COOPERATIVA }}
           AILOS_CODIGO_CONTA: ${{ secrets.AILOS_CODIGO_CONTA }}
           AILOS_SENHA: ${{ secrets.AILOS_SENHA }}
+          CATCHER_URL: ${{ secrets.CATCHER_URL }}
+          CATCHER_SECRET: ${{ secrets.CATCHER_SECRET }}
         run: php vendor/bin/phpunit -c phpunit.xml --testsuite Integration
