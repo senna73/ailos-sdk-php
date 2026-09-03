@@ -15,8 +15,21 @@ class AuthManagerTest extends IntegrationTestCase
     {
         $authManager = new AuthManager(parent::$enviroment, new HttpClient(), new FileStorage());
 
-        $authManager->auth();
+        $authManager->auth(true);
+
+        $this->assertNotNull($authManager->getAccessToken());
+        $this->assertNotNull($authManager->getId());
+        $this->assertNotNull($authManager->getState());
+        $this->assertNotNull($authManager->getJwt());
+
+        $this->assertInstanceOf(\Ailos\Sdk\Entities\AccessToken::class, $authManager->getAccessToken());
+        $this->assertInstanceOf(\Ailos\Sdk\Entities\Jwt::class, $authManager->getJwt());
 
         $authManager->logout();
+
+        $this->assertNull($authManager->getAccessToken());
+        $this->assertNull($authManager->getId());
+        $this->assertNull($authManager->getState());
+        $this->assertNull($authManager->getJwt());
     }
 }

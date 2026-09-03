@@ -24,7 +24,9 @@ class Enviroment extends Entity
         public readonly string $codigoCooperativa,
         public readonly string $codigoConta,
         public readonly string $senha,
-        public readonly string $ambiente = 'homol'
+        public readonly string $ambiente = 'homol',
+        public readonly ?string $catcherUrl = null,
+        public readonly ?string $catcherSecret = null
     ) {
         if (!array_key_exists($this->ambiente, self::URLS)) {
             throw new InvalidArgumentException(

@@ -7,33 +7,50 @@ namespace Ailos\Sdk\Tests;
 use Ailos\Sdk\Entities\Enviroment;
 use Dotenv\Dotenv;
 use Dotenv\Repository\RepositoryBuilder;
+use Dotenv\Repository\RepositoryInterface;
 use PHPUnit\Framework\TestCase;
 
 abstract class IntegrationTestCase extends TestCase
 {
     protected static Enviroment $enviroment;
+    private static RepositoryInterface $repository;
 
     public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
 
-        $repository = RepositoryBuilder::createWithDefaultAdapters()->make();
+        self::$repository = RepositoryBuilder::createWithDefaultAdapters()->make();
 
-        $dotenv = Dotenv::create($repository, PROJECT_ROOT, '.env');
+        $dotenv = Dotenv::create(self::$repository, PROJECT_ROOT, '.env');
         $dotenv->safeLoad();
 
         self::$enviroment = new Enviroment(
-            (string) ($repository->get('AILOS_CONSUMER_KEY') ?? ''),
-            (string) ($repository->get('AILOS_CONSUMER_SECRET') ?? ''),
-            (string) ($repository->get('AILOS_URL_CALLBACK') ?? ''),
-            (string) ($repository->get('AILOS_API_KEY_DEVELOPER') ?? ''),
-            (string) ($repository->get('AILOS_CODIGO_COOPERATIVA') ?? ''),
-            (string) ($repository->get('AILOS_CODIGO_CONTA') ?? ''),
-            (string) ($repository->get('AILOS_SENHA') ?? ''),
+            self::requiredEnv('AILOS_CONSUMER_KEY'),
+            self::requiredEnv('AILOS_CONSUMER_SECRET'),
+            self::requiredEnv('AILOS_URL_CALLBACK'),
+            self::requiredEnv('AILOS_API_KEY_DEVELOPER'),
+            self::requiredEnv('AILOS_CODIGO_COOPERATIVA'),
+            self::requiredEnv('AILOS_CODIGO_CONTA'),
+            self::requiredEnv('AILOS_SENHA'),
+            'homol', // unico ambiente permitido para testes
+            self::requiredEnv('CATCHER_URL'),
+            self::requiredEnv('CATCHER_SECRET'),
         );
+    }
 
-        if (self::$enviroment->ambiente != 'homol') {
-            throw new \Exception('Ambiente invalido para testes');
+    protected static function env(string $key, ?string $default = null): ?string
+    {
+        return (string) (self::$repository->get($key) ?? $default);
+    }
+
+    protected static function requiredEnv(string $key): string
+    {
+        $value = self::env($key);
+
+        if ($value === null || $value === '') {
+            throw new \RuntimeException("Variável de ambiente obrigatória não definida: {$key}");
         }
+
+        return $value;
     }
 }

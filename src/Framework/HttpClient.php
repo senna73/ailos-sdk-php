@@ -16,6 +16,7 @@ readonly class HttpClient
         $this->curl = new Curl(null, [
             CURLOPT_CONNECTTIMEOUT => 10,
             CURLOPT_TIMEOUT => 30,
+            CURLOPT_FOLLOWLOCATION => true,
         ]);
     }
 

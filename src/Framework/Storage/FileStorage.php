@@ -11,7 +11,8 @@ final class FileStorage implements IStorage
 {
     public function __construct(
         private FilesystemAdapter $storage = new FilesystemAdapter('ailos', 0, __DIR__ . '/../../storage')
-    ) {}
+    ) {
+    }
 
     #[Override]
     public function get(string $key): mixed
