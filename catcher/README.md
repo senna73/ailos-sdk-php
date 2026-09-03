@@ -13,7 +13,7 @@ Como os testes de integração deste SDK precisam validar o fluxo real de callba
 O catcher é intencionalmente burro: ele **não interpreta, não valida e não transforma** o payload que recebe. Ele só guarda e devolve, exatamente como chegou.
 
 ```
-──────────────────────────────┐
+┌──────────────────────────────┐
 │        Ailos (Homolog)       │
 └──────────────┬───────────────┘
                │
@@ -37,20 +37,19 @@ O catcher é intencionalmente burro: ele **não interpreta, não valida e não t
 │  │           { code, state, ... }         │  │
 │  └────────────────────────────────────────┘  │
 │                                              │
-│  Mantém o payload associado ao "state"      │ 
+│  Mantém o payload associado ao "state"       │
 └──────────────────────┬───────────────────────┘
                        │
                        │ GET /events?state=...
                        │ X-Catcher-Secret: ****
                        ▼
 ┌──────────────────────────────────────────────┐
-│              Seus testes                    │ 
+│              Seus testes                     │
 │           Local / CI / Automação             │
 │                                              │
 │  Recebe o payload bruto, exatamente como     │
 │  foi enviado pela Ailos.                     │
 └──────────────────────────────────────────────┘
-
 ```
 
 O `state` é o mecanismo padrão do fluxo OAuth2 usado para correlacionar a resposta assíncrona com a requisição que a originou. Cada execução de teste gera um `state` (correlation id) único, envia esse valor para a Ailos no início da autorização, e usa o mesmo valor para consultar o catcher depois.
