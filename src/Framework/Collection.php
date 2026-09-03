@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Ailos\Sdk\Framework;
 
 use Ailos\Sdk\Entities\Enviroment;
+use Ailos\Sdk\Framework\Storage\FileStorage;
 
 abstract readonly class Collection
 {
@@ -14,7 +15,7 @@ abstract readonly class Collection
     public function __construct(private Enviroment $enviroment)
     {
         $this->httpClient = new HttpClient();
-        $this->authManager = new AuthManager($this->enviroment, $this->httpClient);
+        $this->authManager = new AuthManager($this->enviroment, $this->httpClient, new FileStorage());
     }
 
     /**

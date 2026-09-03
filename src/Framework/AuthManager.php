@@ -18,7 +18,13 @@ final class AuthManager
 
     public function getAccessToken(): ?AccessToken
     {
-        return $this->storage->get('access_token');
+        $accessToken = $this->storage->get('access_token');
+
+        if ($accessToken !== null && !($accessToken instanceof AccessToken)) {
+            throw new DomainException('Tipo de access token armazenado incorreto');
+        }
+
+        return $accessToken;
     }
 
     public function setAccessToken(AccessToken $accessToken): void
@@ -33,7 +39,13 @@ final class AuthManager
 
     public function getId(): ?string
     {
-        return $this->storage->get('id');
+        $id = $this->storage->get('id');
+
+        if ($id !== null && !is_string($id)) {
+            throw new DomainException('Tipo de ID armazenado incorreto');
+        }
+
+        return $id;
     }
 
     public function setId(string $id): void
@@ -48,7 +60,13 @@ final class AuthManager
 
     public function getState(): ?string
     {
-        return $this->storage->get('state');
+        $state = $this->storage->get('state');
+
+        if ($state !== null && !is_string($state)) {
+            throw new DomainException('Tipo de estado armazenado incorreto');
+        }
+
+        return $state;
     }
 
     public function setState(string $state): void
@@ -63,7 +81,13 @@ final class AuthManager
 
     public function getJwt(): ?Jwt
     {
-        return $this->storage->get('jwt');
+        $jwt = $this->storage->get('jwt');
+
+        if ($jwt !== null && !($jwt instanceof Jwt)) {
+            throw new DomainException('Tipo de JWT armazenado incorreto');
+        }
+
+        return $jwt;
     }
 
     public function setJwt(Jwt $jwt): void
@@ -112,16 +136,12 @@ final class AuthManager
         return;
     }
 
-    private function waitForJwtViaStorage(): ?Jwt
+    private function waitForJwtViaStorage(): Jwt
     {
         $startTime = microtime(true);
 
         while (true) {
-            $jwt = $this->storage->get('jwt');
-
-            if ($jwt !== null) {
-                return $jwt;
-            }
+            $jwt = $this->getJwt();
 
             if ((microtime(true) - $startTime) >= 30) {
                 throw new \RuntimeException('Tempo para receber o JWT excedido.');
@@ -131,7 +151,7 @@ final class AuthManager
         }
     }
 
-    private function waitForJwtViaCatcher(): ?Jwt
+    private function waitForJwtViaCatcher(): Jwt
     {
         $startTime = microtime(true);
 
@@ -252,10 +272,21 @@ final class AuthManager
 
     private function requestCatcher(): Jwt
     {
+        $state = $this->getState();
+        $catcherUrl = $this->enviroment->catcherUrl;
+
+        if ($state === null) {
+            throw new \RuntimeException('Estado não gerado. Chame o método auth() antes de aguardar o JWT.');
+        }
+
+        if ($catcherUrl === null) {
+            throw new \RuntimeException('URL do catcher não configurada.');
+        }
+
         $response = $this->httpClient->get(
-            $this->enviroment->catcherUrl,
+            $catcherUrl,
             ['X-Catcher-Secret' => $this->enviroment->catcherSecret],
-            ['state' => $this->getState()]
+            ['state' => $state]
         );
 
         if (!($response instanceof \stdClass)) {
@@ -273,6 +304,10 @@ final class AuthManager
                 'Authorization' => 'Bearer ' . $accessToken->accessToken,
             ]
         );
+
+        if (!is_string($response)) {
+            throw new DomainException('Tipo de retorno incorreto');
+        }
 
         return new Jwt($jwt->state, $response);
     }
