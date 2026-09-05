@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Ailos\Sdk\Collections;
 
 use Ailos\Sdk\Entities\Boleto;
+use Ailos\Sdk\Entities\BoletoCarneLote;
 use Ailos\Sdk\Entities\BoletoLote;
 use Ailos\Sdk\Framework\Collection;
 use DomainException;
@@ -40,5 +41,11 @@ readonly class BoletoCollection extends Collection
         );
     }
 
-
+    public function gerarLoteCarne(string $convenio, BoletoCarneLote $lote): void
+    {
+        $this->post(
+            "/ailos/cobranca/api/v2/boletos/gerar/carne/lote/convenios/{$convenio}",
+            $lote
+        );
+    }
 }

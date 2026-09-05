@@ -6,6 +6,8 @@ namespace Ailos\Sdk\Tests\Integration;
 
 use Ailos\Sdk\Collections\BoletoCollection;
 use Ailos\Sdk\Entities\Boleto;
+use Ailos\Sdk\Entities\BoletoCarne;
+use Ailos\Sdk\Entities\BoletoCarneLote;
 use Ailos\Sdk\Entities\BoletoLote;
 use Ailos\Sdk\Tests\IntegrationTestCase;
 
@@ -53,6 +55,23 @@ class BoletoCollectionTest extends IntegrationTestCase
         $this->addToAssertionCount(1);
     }
 
+    public function testGerarLoteCarne(): void
+    {
+        $lote = BoletoCarneLote::fromArray([
+            'convenioCobranca' => [
+                'codigoCarteiraCobranca' => 1,
+            ],
+            'carnes' => [$this->carne()],
+        ]);
+
+        $this->collection()->gerarLoteCarne(
+            self::CONVENIO,
+            $lote,
+        );
+
+        $this->addToAssertionCount(1);
+    }
+
     private function collection(): BoletoCollection
     {
         return new BoletoCollection(self::$enviroment, self::$config);
@@ -60,7 +79,26 @@ class BoletoCollectionTest extends IntegrationTestCase
 
     private function boleto(): Boleto
     {
-        return Boleto::fromArray([
+        return Boleto::fromArray($this->boletoData());
+    }
+
+    private function carne(): BoletoCarne
+    {
+        return BoletoCarne::fromArray([
+            ...$this->boletoData(),
+            'numeroParcela' => 1,
+            'tipoVencimento' => [
+                'tipoVencimento' => 1,
+                'quantidadeXDias' => 0,
+                'diaXDeCadaMes' => 0,
+            ],
+        ]);
+    }
+
+    /** @return array<string, mixed> */
+    private function boletoData(): array
+    {
+        return [
             'convenioCobranca' => [
                 'codigoCarteiraCobranca' => 1,
             ],
@@ -132,6 +170,6 @@ class BoletoCollectionTest extends IntegrationTestCase
                 ],
             ],
             'indicadorRegistroNuclea' => 0,
-        ]);
+        ];
     }
 }

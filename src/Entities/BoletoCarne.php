@@ -20,6 +20,8 @@ class BoletoCarne extends Entity
         public readonly PagamentoDivergente $pagamentoDivergente,
         public readonly Avalista $avalista,
         public readonly int $indicadorRegistroNuclea,
+        public readonly int $numeroParcela,
+        public readonly TipoVencimento $tipoVencimento,
     ) {
     }
 }
