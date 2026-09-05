@@ -13,6 +13,14 @@ RUN { \
         echo 'xdebug.discover_client_host=false'; \
     } > /usr/local/etc/php/conf.d/xdebug.ini
 
+# Instala o APCu
+RUN pecl install apcu && docker-php-ext-enable apcu
+
+RUN { \
+        echo 'apc.enabled=1'; \
+        echo 'apc.enable_cli=1'; \
+    } > /usr/local/etc/php/conf.d/apcu.ini
+
 # Instala dependências do sistema necessárias para extensões comuns e para o Composer
 RUN apt-get update && apt-get install -y --no-install-recommends \
         git \
