@@ -11,7 +11,7 @@ use DomainException;
 
 readonly class BoletoCollection extends Collection
 {
-    public function consultarUnicoBoleto(string $convenio, string $numero): Boleto
+    public function consultarBoleto(string $convenio, string $numero): Boleto
     {
         $response = $this->get(
             "/ailos/cobranca/api/v2/boletos/consultar/boleto/convenios/{$convenio}/{$numero}"

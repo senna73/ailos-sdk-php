@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace Ailos\Sdk\Tests\Integration;
 
+use Ailos\Sdk\Entities\AccessToken;
+use Ailos\Sdk\Entities\Jwt;
 use Ailos\Sdk\Framework\AuthManager;
-use Ailos\Sdk\Framework\HttpClient;
-use Ailos\Sdk\Framework\Storage\FileStorage;
 use Ailos\Sdk\Tests\IntegrationTestCase;
 
 class AuthManagerTest extends IntegrationTestCase
 {
     public function testAuthManager(): void
     {
-        $authManager = new AuthManager(parent::$enviroment, new HttpClient(), new FileStorage());
+        $authManager = new AuthManager(parent::$enviroment, parent::$config);
 
         $authManager->auth(true);
 
@@ -22,8 +22,8 @@ class AuthManagerTest extends IntegrationTestCase
         $this->assertNotNull($authManager->getState());
         $this->assertNotNull($authManager->getJwt());
 
-        $this->assertInstanceOf(\Ailos\Sdk\Entities\AccessToken::class, $authManager->getAccessToken());
-        $this->assertInstanceOf(\Ailos\Sdk\Entities\Jwt::class, $authManager->getJwt());
+        $this->assertInstanceOf(AccessToken::class, $authManager->getAccessToken());
+        $this->assertInstanceOf(Jwt::class, $authManager->getJwt());
 
         $authManager->logout();
 

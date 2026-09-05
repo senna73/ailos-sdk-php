@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Ailos\Sdk\Tests;
 
 use Ailos\Sdk\Entities\Enviroment;
+use Ailos\Sdk\Entities\SdkConfig;
 use Dotenv\Dotenv;
 use Dotenv\Repository\RepositoryBuilder;
 use Dotenv\Repository\RepositoryInterface;
@@ -13,6 +14,7 @@ use PHPUnit\Framework\TestCase;
 abstract class IntegrationTestCase extends TestCase
 {
     protected static Enviroment $enviroment;
+    protected static SdkConfig $config;
     private static RepositoryInterface $repository;
 
     public static function setUpBeforeClass(): void
@@ -36,6 +38,8 @@ abstract class IntegrationTestCase extends TestCase
             self::requiredEnv('CATCHER_URL'),
             self::requiredEnv('CATCHER_SECRET'),
         );
+
+        self::$config = new SdkConfig();
     }
 
     protected static function env(string $key, ?string $default = null): ?string

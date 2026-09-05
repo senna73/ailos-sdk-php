@@ -7,18 +7,18 @@ namespace Ailos\Sdk\Framework;
 use Ailos\Sdk\Entities\AccessToken;
 use Ailos\Sdk\Entities\Enviroment;
 use Ailos\Sdk\Entities\Jwt;
-use Ailos\Sdk\Framework\Storage\IStorage;
+use Ailos\Sdk\Entities\SdkConfig;
 use DomainException;
 
 final class AuthManager
 {
-    public function __construct(private Enviroment $enviroment, private HttpClient $httpClient, private IStorage $storage)
+    public function __construct(private Enviroment $enviroment, private SdkConfig $config)
     {
     }
 
     public function getAccessToken(): ?AccessToken
     {
-        $accessToken = $this->storage->get('access_token');
+        $accessToken = $this->config->storage->get('access_token');
 
         if ($accessToken !== null && !($accessToken instanceof AccessToken)) {
             throw new DomainException('Tipo de access token armazenado incorreto');
@@ -29,17 +29,17 @@ final class AuthManager
 
     public function setAccessToken(AccessToken $accessToken): void
     {
-        $this->storage->set('access_token', $accessToken, $accessToken->expiresIn);
+        $this->config->storage->set('access_token', $accessToken, $accessToken->expiresIn);
     }
 
     public function deleteAccessToken(): void
     {
-        $this->storage->delete('access_token');
+        $this->config->storage->delete('access_token');
     }
 
     public function getId(): ?string
     {
-        $id = $this->storage->get('id');
+        $id = $this->config->storage->get('id');
 
         if ($id !== null && !is_string($id)) {
             throw new DomainException('Tipo de ID armazenado incorreto');
@@ -50,17 +50,17 @@ final class AuthManager
 
     public function setId(string $id): void
     {
-        $this->storage->set('id', $id, 3600);
+        $this->config->storage->set('id', $id, 3600);
     }
 
     public function deleteId(): void
     {
-        $this->storage->delete('id');
+        $this->config->storage->delete('id');
     }
 
     public function getState(): ?string
     {
-        $state = $this->storage->get('state');
+        $state = $this->config->storage->get('state');
 
         if ($state !== null && !is_string($state)) {
             throw new DomainException('Tipo de estado armazenado incorreto');
@@ -71,17 +71,17 @@ final class AuthManager
 
     public function setState(string $state): void
     {
-        $this->storage->set('state', $state, 3600);
+        $this->config->storage->set('state', $state, 3600);
     }
 
     public function deleteState(): void
     {
-        $this->storage->delete('state');
+        $this->config->storage->delete('state');
     }
 
     public function getJwt(): ?Jwt
     {
-        $jwt = $this->storage->get('jwt');
+        $jwt = $this->config->storage->get('jwt');
 
         if ($jwt !== null && !($jwt instanceof Jwt)) {
             throw new DomainException('Tipo de JWT armazenado incorreto');
@@ -92,12 +92,12 @@ final class AuthManager
 
     public function setJwt(Jwt $jwt): void
     {
-        $this->storage->set('jwt', $jwt, 3600);
+        $this->config->storage->set('jwt', $jwt, 3600);
     }
 
     public function deleteJwt(): void
     {
-        $this->storage->delete('jwt');
+        $this->config->storage->delete('jwt');
     }
 
     public function auth(bool $useCatcherService = false): void
@@ -172,7 +172,7 @@ final class AuthManager
 
     private function requestAccessToken(): AccessToken
     {
-        $response = $this->httpClient->post(
+        $response = $this->config->http->post(
             $this->enviroment->baseUrl . '/token',
             [
                 'Authorization' => 'Basic ' . base64_encode(
@@ -185,18 +185,14 @@ final class AuthManager
             ]
         );
 
-        if (!($response instanceof \stdClass)) {
-            throw new DomainException('Tipo de retorno incorreto');
-        }
-
-        return AccessToken::fromObject($response);
+        return AccessToken::fromArray($response->json());
     }
 
     private function requestId(AccessToken $accessToken): string
     {
-        $this->setState(bin2hex(random_bytes(16)));
+        $state = bin2hex(random_bytes(16));
 
-        $response = $this->httpClient->post(
+        $response = $this->config->http->post(
             $this->enviroment->baseUrl . '/ailos/identity/api/v1/autenticacao/login/obter/id',
             [
                 'Content-Type' => 'application/json',
@@ -206,20 +202,18 @@ final class AuthManager
             [
                 'urlCallback' => $this->enviroment->urlCallback,
                 'ailosApiKeyDeveloper' => $this->enviroment->developerKey,
-                'state' => $this->getState(),
+                'state' => $state,
             ]
         );
 
-        if (!is_string($response)) {
-            throw new DomainException('Tipo de retorno incorreto');
-        }
+        $this->setState($state);
 
-        return $response;
+        return $response->getBody();
     }
 
     private function requestJwt(AccessToken $accessToken, string $id): void
     {
-        $response = $this->httpClient->post(
+        $response = $this->config->http->post(
             $this->enviroment->baseUrl . '/ailos/identity/api/v1/login/index?id=' . rawurlencode($id),
             [
                 'Authorization' => 'Bearer ' . $accessToken->accessToken,
@@ -232,18 +226,16 @@ final class AuthManager
             ]
         );
 
-        if (!is_string($response)) {
-            throw new DomainException('Tipo de retorno incorreto');
-        }
+        $data = $response->getBody();
 
-        if ($response === '') {
+        if ($data === '') {
             throw new \RuntimeException('Resposta vazia ao tentar gerar o JWT.');
         }
 
         libxml_use_internal_errors(true);
 
         $dom = new \DOMDocument();
-        $dom->loadHTML($response);
+        $dom->loadHTML($data);
 
         $xpath = new \DOMXPath($dom);
 
@@ -283,33 +275,25 @@ final class AuthManager
             throw new \RuntimeException('URL do catcher não configurada.');
         }
 
-        $response = $this->httpClient->get(
+        $response = $this->config->http->get(
             $catcherUrl,
             ['X-Catcher-Secret' => $this->enviroment->catcherSecret],
             ['state' => $state]
         );
 
-        if (!($response instanceof \stdClass)) {
-            throw new DomainException('Tipo de retorno incorreto');
-        }
-
-        return Jwt::fromObject($response);
+        return Jwt::fromArray($response->json());
     }
 
     private function requestJwtRefresh(AccessToken $accessToken, Jwt $jwt): Jwt
     {
-        $response = $this->httpClient->get(
+        $response = $this->config->http->get(
             $this->enviroment->baseUrl . "/ailos/identity/api/v1/autenticacao/token/refresh?code={$jwt->code}",
             [
                 'Authorization' => 'Bearer ' . $accessToken->accessToken,
             ]
         );
 
-        if (!is_string($response)) {
-            throw new DomainException('Tipo de retorno incorreto');
-        }
-
-        return new Jwt($jwt->state, $response);
+        return new Jwt($jwt->state, $response->getBody());
     }
 
     /**

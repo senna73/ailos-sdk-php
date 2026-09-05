@@ -5,17 +5,15 @@ declare(strict_types=1);
 namespace Ailos\Sdk\Framework;
 
 use Ailos\Sdk\Entities\Enviroment;
-use Ailos\Sdk\Framework\Storage\FileStorage;
+use Ailos\Sdk\Entities\SdkConfig;
 
 abstract readonly class Collection
 {
-    private HttpClient $httpClient;
     private AuthManager $authManager;
 
-    public function __construct(private Enviroment $enviroment)
+    public function __construct(private Enviroment $enviroment, private SdkConfig $config)
     {
-        $this->httpClient = new HttpClient();
-        $this->authManager = new AuthManager($this->enviroment, $this->httpClient, new FileStorage());
+        $this->authManager = new AuthManager($this->enviroment, $this->config);
     }
 
     /**
@@ -34,7 +32,7 @@ abstract readonly class Collection
             $data = $data::toArray();
         }
 
-        return $this->httpClient->post(
+        return $this->config->http->post(
             $url,
             $headers,
             $data
@@ -52,7 +50,7 @@ abstract readonly class Collection
         $url = $this->enviroment->baseUrl . $url;
         $headers = array_merge($this->authManager->getAuthHeader(), $headers);
 
-        return $this->httpClient->get(
+        return $this->config->http->get(
             $url,
             $headers,
             $query
