@@ -16,4 +16,12 @@ readonly class PagadorCollection extends Collection
             $pagador
         );
     }
+
+    public function alterarPagador(Pagador $pagador): void
+    {
+        $this->put(
+            '/ailos/cobranca/api/v1/pagadores/alterar',
+            $pagador
+        );
+    }
 }
