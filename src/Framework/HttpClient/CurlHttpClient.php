@@ -38,6 +38,22 @@ readonly class CurlHttpClient implements IHttpClient
 
     /**
      * @param array<mixed, mixed> $headers
+     * @param array<mixed, mixed> $data
+     * @throws RuntimeException
+     */
+    public function put(string $url, array $headers = [], array $data = []): HttpResponse
+    {
+        foreach ($headers as $name => $value) {
+            $this->curl->setHeader($name, $value);
+        }
+
+        $this->curl->put($url, $data);
+
+        return $this->buildResponse();
+    }
+
+    /**
+     * @param array<mixed, mixed> $headers
      * @param array<mixed, mixed> $query
      * @throws RuntimeException
      */
