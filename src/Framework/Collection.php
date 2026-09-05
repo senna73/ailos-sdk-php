@@ -41,6 +41,29 @@ abstract readonly class Collection
 
     /**
      * @param array<string, mixed> $headers
+     */
+    protected function put(string $url, ?Entity $data, array $headers = []): mixed
+    {
+        $this->authManager->auth();
+
+        $url = $this->enviroment->baseUrl . $url;
+        $headers = array_merge($this->authManager->getAuthHeader(), $headers);
+
+        if ($data === null) {
+            $data = [];
+        } else {
+            $data = $data::toArray();
+        }
+
+        return $this->config->http->put(
+            $url,
+            $headers,
+            $data
+        );
+    }
+
+    /**
+     * @param array<string, mixed> $headers
      * @param array<string, mixed> $query
      */
     protected function get(string $url, array $query = [], array $headers = []): mixed
