@@ -11,12 +11,12 @@
     ],
     "require": {
         "php": "^8.5",
+        "ext-apcu": "*",
         "ext-curl": "*",
         "ext-dom": "*",
         "ext-libxml": "*",
         "cuyz/valinor": "^2.6",
-        "php-curl-class/php-curl-class": "^13.0",
-        "symfony/cache": "^8.1"
+        "php-curl-class/php-curl-class": "^13.0"
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^3.0",

@@ -4,13 +4,17 @@
 # Composer
 composer.lock
 
-# PHP CS Fixer
-.php-cs-fixer.cache
+# Ferramentas de desenvolvimento
+/cache/*
+!/cache/.gitkeep
 
-# PHPUnit
+# Relatório visual de cobertura
+/coverage/
+
+# Artefatos legados gerados antes da centralização
+.php-cs-fixer.cache
 .phpunit.cache/
 .phpunit.result.cache
-/coverage/
 
 # IDEs
 .idea/

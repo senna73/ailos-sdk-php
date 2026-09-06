@@ -16,4 +16,5 @@ return (new PhpCsFixer\Config())
         'single_quote'                 => true,
     ])
     ->setFinder($finder)
+    ->setCacheFile(__DIR__ . '/cache/php-cs-fixer.php')
     ->setRiskyAllowed(true);
