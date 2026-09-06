@@ -4,40 +4,47 @@ declare(strict_types=1);
 
 namespace Ailos\Sdk;
 
-use Ailos\Sdk\Collections\BoletoCollection;
-use Ailos\Sdk\Entities\Boleto;
-use Ailos\Sdk\Entities\Enviroment;
-use Ailos\Sdk\Entities\Jwt;
-use Ailos\Sdk\Entities\SdkConfig;
-use Ailos\Sdk\Framework\Storage\ApcuStorage;
+use Ailos\Sdk\Auth\Auth;
+use Ailos\Sdk\Auth\Jwt;
+use Ailos\Sdk\Config\AilosContext;
+use Ailos\Sdk\Endpoints\Boleto\ConsultarBoleto;
+use Ailos\Sdk\Http\AuthenticatedHttp;
+use Ailos\Sdk\Http\IHttp;
 
-class Ailos
+final class Ailos
 {
-    public function __construct(
-        private readonly Enviroment $enviroment,
-        private readonly SdkConfig $config
-    ) {
+    private readonly IHttp $http;
+
+    public function __construct(private AilosContext $context)
+    {
+        $this->http = new AuthenticatedHttp($this->context);
     }
 
-    public static function handleJwtCallback(\stdClass $payload): void
+    /**
+     * @param array<string, mixed> $payload
+     */
+    public function handleJwtCallback(array $payload): void
     {
-        $storage = new ApcuStorage();
+        $auth = new Auth($this->context);
 
-        $jwt = Jwt::fromObject($payload);
-
-        if ($jwt->state == null) {
+        if ($payload['state'] == null) {
             throw new \RuntimeException('State não encontrado no JWT.');
         }
 
-        if ($storage->get('state') !== $jwt->state) {
+        if ($payload['state'] !== $auth->getState()) {
             throw new \RuntimeException('State inválido no JWT.');
         }
 
-        $storage->set('jwt', $jwt, 3600);
+        $jwt = Jwt::fromArray($payload);
+
+        $auth->setJwt($jwt);
     }
 
-    public function consultarBoleto(string $convenio, string $numero): Boleto
+    /**
+     * @return array<string, mixed>
+     */
+    public function consultarBoleto(string $convenio, string $numero): array
     {
-        return new BoletoCollection($this->enviroment, $this->config)->consultarBoleto($convenio, $numero);
+        return new ConsultarBoleto($this->context, $this->http)->handle($convenio, $numero);
     }
 }
