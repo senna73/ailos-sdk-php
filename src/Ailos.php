@@ -8,12 +8,12 @@ use Ailos\Sdk\Auth\Auth;
 use Ailos\Sdk\Auth\Jwt;
 use Ailos\Sdk\Config\AilosContext;
 use Ailos\Sdk\Endpoints\Boleto\ConsultarBoleto;
-use Ailos\Sdk\Http\AuthenticatedHttp;
-use Ailos\Sdk\Http\IHttp;
 
 final class Ailos
 {
-    public function __construct(private AilosContext $context) {}
+    public function __construct(private AilosContext $context)
+    {
+    }
 
     /**
      * @param array<string, mixed> $payload

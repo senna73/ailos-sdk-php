@@ -20,18 +20,19 @@ class PagadorTest extends IntegrationTestCase
 
     public function testCadastrarPagador(): void
     {
-       new CadastrarPagador(parent::$context)->handle($this->pagador());
-        
-        $this->addToAssertionCount(1);
-    }
-        
-    public function testAlterarPagador(): void
-    {
-        new AlterarPagador(parent::$context)->handle($this->pagador());
-        
+        new CadastrarPagador(parent::$context)->handle($this->pagador());
+
         $this->addToAssertionCount(1);
     }
 
+    public function testAlterarPagador(): void
+    {
+        new AlterarPagador(parent::$context)->handle($this->pagador());
+
+        $this->addToAssertionCount(1);
+    }
+
+    /** @return array<string, mixed> */
     private function pagador(): array
     {
         return [

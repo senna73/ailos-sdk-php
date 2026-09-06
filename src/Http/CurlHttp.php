@@ -49,17 +49,6 @@ final class CurlHttp implements IHttp
 
     private function handleResponse(Curl $curl): Response
     {
-        if ($curl->error) {
-            throw new RuntimeException(
-                // @phpstan-ignore-next-line argument.type
-                sprintf(
-                    'Falha ao comunicar com a API Ailos: [%s] %s',
-                    $curl->errorCode,
-                    $curl->errorMessage,
-                ),
-            );
-        }
-
         if ($curl->httpStatusCode >= 400) {
             throw new RuntimeException(
                 // @phpstan-ignore-next-line argument.type
@@ -67,6 +56,17 @@ final class CurlHttp implements IHttp
                     'API Ailos retornou erro HTTP %d: %s',
                     $curl->httpStatusCode,
                     $this->extractErrorMessage($curl->rawResponse),
+                ),
+            );
+        }
+
+        if ($curl->error) {
+            throw new RuntimeException(
+                // @phpstan-ignore-next-line argument.type
+                sprintf(
+                    'Falha ao comunicar com a API Ailos: [%s] %s',
+                    $curl->errorCode,
+                    $curl->errorMessage,
                 ),
             );
         }
@@ -91,6 +91,15 @@ final class CurlHttp implements IHttp
         }
 
         $message = $decoded['message'] ?? $decoded['erro'] ?? $decoded['error'] ?? null;
+
+        $details = $decoded['details'] ?? null;
+        if (is_array($details)) {
+            foreach ($details as $detail) {
+                if (is_array($detail) && is_string($detail['message'] ?? null)) {
+                    return $detail['message'];
+                }
+            }
+        }
 
         return is_string($message) ? $message : $rawBody;
     }

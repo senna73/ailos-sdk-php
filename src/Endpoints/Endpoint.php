@@ -6,7 +6,6 @@ namespace Ailos\Sdk\Endpoints;
 
 use Ailos\Sdk\Config\AilosContext;
 use Ailos\Sdk\Http\AuthenticatedHttp;
-use Ailos\Sdk\Http\IHttp;
 use Ailos\Sdk\Http\Request;
 use Ailos\Sdk\Http\Response;
 
