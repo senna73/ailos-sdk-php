@@ -26,7 +26,7 @@ class AuthManagerTest extends IntegrationTestCase
         new Auth(parent::$context)->logout();
     }
 
-    public function testAuthManagerAuth(): void
+    public function testAuth(): void
     {
         $authManager = new Auth(parent::$context);
 
@@ -41,7 +41,7 @@ class AuthManagerTest extends IntegrationTestCase
         $this->assertInstanceOf(Jwt::class, $authManager->getJwt());
     }
 
-    public function testAuthManagerLogout(): void
+    public function testLogout(): void
     {
         $authManager = new Auth(parent::$context);
 
@@ -55,7 +55,7 @@ class AuthManagerTest extends IntegrationTestCase
         $this->assertNull($authManager->getJwt());
     }
 
-    public function testAuthManagerUsesCachedSessionData(): void
+    public function testAuthUsesCachedTokens(): void
     {
         $authManager = new Auth(parent::$context);
 
@@ -85,7 +85,7 @@ class AuthManagerTest extends IntegrationTestCase
         $this->assertSame($jwt->code, $cachedJwt?->code);
     }
 
-    public function testAuthManagerRefreshesExpiredJwt(): void
+    public function testAuthRefreshesExpiredJwt(): void
     {
         $authManager = new Auth(parent::$context);
 
