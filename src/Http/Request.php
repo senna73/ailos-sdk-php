@@ -23,6 +23,11 @@ final readonly class Request
     ) {
     }
 
+    public function withPath(string $path): self
+    {
+        return new self($path, $this->query, $this->body, $this->headers);
+    }
+
     /**
      * @param array<string, string> $headers
      */

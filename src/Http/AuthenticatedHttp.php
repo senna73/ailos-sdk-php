@@ -30,6 +30,10 @@ final class AuthenticatedHttp implements IHttp
 
     private function authenticate(Request $request): Request
     {
+        $request = $request->withPath(
+            $this->context->environment->baseUrl . $request->path
+        );
+
         $auth = new Auth($this->context);
 
         $auth->auth();
@@ -49,6 +53,8 @@ final class AuthenticatedHttp implements IHttp
         // $token = $this->authManager->getValidToken();
 
         return $request->withHeaders([
+            'Content-Type' => 'application/json',
+            'accept' => 'application/json',
             'x-ailos-authentication' => 'Bearer ' . $jwt->code,
             'Authorization' => $accessToken->tokenType . ' ' . $accessToken->accessToken,
         ]);

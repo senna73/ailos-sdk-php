@@ -13,12 +13,7 @@ use Ailos\Sdk\Http\IHttp;
 
 final class Ailos
 {
-    private readonly IHttp $http;
-
-    public function __construct(private AilosContext $context)
-    {
-        $this->http = new AuthenticatedHttp($this->context);
-    }
+    public function __construct(private AilosContext $context) {}
 
     /**
      * @param array<string, mixed> $payload
@@ -45,6 +40,6 @@ final class Ailos
      */
     public function consultarBoleto(string $convenio, string $numero): array
     {
-        return new ConsultarBoleto($this->context, $this->http)->handle($convenio, $numero);
+        return new ConsultarBoleto($this->context)->handle($convenio, $numero);
     }
 }
