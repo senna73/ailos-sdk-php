@@ -8,10 +8,12 @@ use Ailos\Sdk\Endpoints\Instrucao\AnuenciaEletronica;
 use Ailos\Sdk\Endpoints\Instrucao\CancelarNegativacao;
 use Ailos\Sdk\Endpoints\Instrucao\CancelarProtesto;
 use Ailos\Sdk\Endpoints\Instrucao\NegativarBoleto;
+use Ailos\Sdk\Endpoints\Instrucao\ProtestoAutomatico;
 use Ailos\Sdk\Tests\IntegrationTestCase;
 
 /**
  * @phpstan-import-type CancelarNegativacaoRequest from CancelarNegativacao
+ * @phpstan-import-type ProtestoAutomaticoRequest from ProtestoAutomatico
  */
 class InstrucaoTest extends IntegrationTestCase
 {
@@ -43,6 +45,13 @@ class InstrucaoTest extends IntegrationTestCase
         $this->addToAssertionCount(1);
     }
 
+    public function testProtestoAutomatico(): void
+    {
+        new ProtestoAutomatico(parent::$context)->handle($this->protestoAutomatico());
+
+        $this->addToAssertionCount(1);
+    }
+
     /** @return CancelarNegativacaoRequest */
     private function instrucoes(): array
     {
@@ -51,6 +60,20 @@ class InstrucaoTest extends IntegrationTestCase
                 [
                     'numeroConvenio' => 101004,
                     'numeroBoleto' => 100001,
+                ],
+            ],
+        ];
+    }
+
+    /** @return ProtestoAutomaticoRequest */
+    private function protestoAutomatico(): array
+    {
+        return [
+            'boletos' => [
+                [
+                    'numeroConvenio' => 101004,
+                    'numeroBoleto' => 100001,
+                    'diasProtesto' => 10,
                 ],
             ],
         ];
