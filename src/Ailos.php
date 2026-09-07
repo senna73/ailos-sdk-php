@@ -30,6 +30,10 @@ use Ailos\Sdk\Endpoints\Pagador\AlterarPagador;
 use Ailos\Sdk\Endpoints\Pagador\CadastrarPagador;
 use Ailos\Sdk\Endpoints\Pagador\ConsultarPagador;
 use Ailos\Sdk\Endpoints\Pagador\ListarPagadores;
+use Ailos\Sdk\Endpoints\Webhook\CadastrarWebhook;
+use Ailos\Sdk\Endpoints\Webhook\ConsultarWebhook;
+use Ailos\Sdk\Endpoints\Webhook\ExcluirWebhook;
+use Ailos\Sdk\Endpoints\Webhook\ListarWebhooks;
 
 /**
  * @phpstan-import-type CadastrarPagadorRequest from CadastrarPagador
@@ -55,6 +59,7 @@ use Ailos\Sdk\Endpoints\Pagador\ListarPagadores;
  * @phpstan-import-type NegativarBoletoRequest from NegativarBoleto
  * @phpstan-import-type ProtestoAutomaticoRequest from ProtestoAutomatico
  * @phpstan-import-type ProtestarBoletoRequest from ProtestarBoleto
+ * @phpstan-import-type CadastrarWebhookRequest from CadastrarWebhook
  */
 final class Ailos
 {
@@ -260,6 +265,35 @@ final class Ailos
     public function protestarBoleto(array $instrucoes): void
     {
         new ProtestarBoleto($this->context)->handle($instrucoes);
+    }
+
+    /**
+     * @param CadastrarWebhookRequest $webhook
+     */
+    public function cadastrarWebhook(array $webhook): void
+    {
+        new CadastrarWebhook($this->context)->handle($webhook);
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    public function listarWebhooks(int $evento): array
+    {
+        return new ListarWebhooks($this->context)->handle($evento);
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    public function consultarWebhook(string $identificador): array
+    {
+        return new ConsultarWebhook($this->context)->handle($identificador);
+    }
+
+    public function excluirWebhook(int $evento): void
+    {
+        new ExcluirWebhook($this->context)->handle($evento);
     }
 
 }
