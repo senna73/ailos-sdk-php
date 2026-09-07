@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Ailos\Sdk\Tests\Integration;
 
 use Ailos\Sdk\Endpoints\Instrucao\AnuenciaEletronica;
+use Ailos\Sdk\Endpoints\Instrucao\AlterarFormaEmissao;
 use Ailos\Sdk\Endpoints\Instrucao\CancelarNegativacao;
 use Ailos\Sdk\Endpoints\Instrucao\CancelarProtesto;
 use Ailos\Sdk\Endpoints\Instrucao\NegativarBoleto;
@@ -14,6 +15,7 @@ use Ailos\Sdk\Tests\IntegrationTestCase;
 
 /**
  * @phpstan-import-type CancelarNegativacaoRequest from CancelarNegativacao
+ * @phpstan-import-type AlterarFormaEmissaoRequest from AlterarFormaEmissao
  * @phpstan-import-type ProtestoAutomaticoRequest from ProtestoAutomatico
  */
 class InstrucaoTest extends IntegrationTestCase
@@ -28,6 +30,13 @@ class InstrucaoTest extends IntegrationTestCase
     public function testAnuenciaEletronica(): void
     {
         new AnuenciaEletronica(parent::$context)->handle($this->instrucoes());
+
+        $this->addToAssertionCount(1);
+    }
+
+    public function testAlterarFormaEmissao(): void
+    {
+        new AlterarFormaEmissao(parent::$context)->handle($this->alterarFormaEmissao());
 
         $this->addToAssertionCount(1);
     }
@@ -82,6 +91,22 @@ class InstrucaoTest extends IntegrationTestCase
                     'numeroConvenio' => 101004,
                     'numeroBoleto' => 100001,
                     'diasProtesto' => 10,
+                ],
+            ],
+        ];
+    }
+
+    /** @return AlterarFormaEmissaoRequest */
+    private function alterarFormaEmissao(): array
+    {
+        return [
+            'boletos' => [
+                [
+                    'numeroConvenio' => 101004,
+                    'numeroBoleto' => 100001,
+                    'emissao' => [
+                        'forma' => 1,
+                    ],
                 ],
             ],
         ];
