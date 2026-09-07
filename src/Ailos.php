@@ -37,10 +37,6 @@ final class Ailos
     {
         $auth = new Auth($this->context);
 
-        if (!isset($payload['state'])) {
-            throw new \RuntimeException('State não encontrado no JWT.');
-        }
-
         if ($payload['state'] !== $auth->getState()) {
             throw new \RuntimeException('State inválido no JWT.');
         }
@@ -71,7 +67,7 @@ final class Ailos
      */
     public function alterarPagador(array $pagador): void
     {
-        return new AlterarPagador($this->context)->handle($pagador);
+        new AlterarPagador($this->context)->handle($pagador);
     }
 
     /**
@@ -87,7 +83,7 @@ final class Ailos
      */
     public function gerarBoleto(string $convenio, array $boleto): void
     {
-        return new GerarBoleto($this->context)->handle($convenio, $boleto);
+        new GerarBoleto($this->context)->handle($convenio, $boleto);
     }
 
     /**
@@ -95,7 +91,7 @@ final class Ailos
      */
     public function gerarLoteBoleto(string $convenio, array $lote): void
     {
-        return new GerarLoteBoleto($this->context)->handle($convenio, $lote);
+        new GerarLoteBoleto($this->context)->handle($convenio, $lote);
     }
 
     /**
@@ -103,7 +99,7 @@ final class Ailos
      */
     public function gerarLoteCarne(string $convenio, array $lote): void
     {
-        return new GerarLoteCarne($this->context)->handle($convenio, $lote);
+        new GerarLoteCarne($this->context)->handle($convenio, $lote);
     }
 
 }

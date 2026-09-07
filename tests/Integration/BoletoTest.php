@@ -10,17 +10,18 @@ use Ailos\Sdk\Endpoints\Boleto\GerarLoteBoleto;
 use Ailos\Sdk\Endpoints\Boleto\GerarLoteCarne;
 use Ailos\Sdk\Tests\IntegrationTestCase;
 
+/**
+ * @phpstan-import-type GerarBoletoRequest from GerarBoleto
+ */
 class BoletoTest extends IntegrationTestCase
 {
     private const string CONVENIO = '101004';
 
-    private const string NUMERO_BOLETO = '123456789';
-
     public function testConsultarBoleto(): void
     {
-        new ConsultarBoleto(parent::$context)->handle(self::CONVENIO, self::NUMERO_BOLETO);
+        $response = new ConsultarBoleto(parent::$context)->handle(self::CONVENIO, '100001');
 
-        $this->addToAssertionCount(1);
+        self::assertArrayHasKey('boleto', $response);
     }
 
     public function testGerarBoleto(): void
@@ -70,7 +71,7 @@ class BoletoTest extends IntegrationTestCase
         $this->addToAssertionCount(1);
     }
 
-    /** @return array<string, mixed> */
+    /** @return GerarBoletoRequest */
     private function boleto(): array
     {
         return  [
@@ -136,6 +137,10 @@ class BoletoTest extends IntegrationTestCase
             ],
             'valorBoleto' => [
                 'valorNominal' => 1500,
+            ],
+            'pagamentoDivergente' => [
+                'tipoPagamentoDivergente' => 0,
+                'valorMinimoPagamentoDivergente' => 0,
             ],
             'avisoSms' => [
                 'enviarAvisoVencimentoSms' => 1,

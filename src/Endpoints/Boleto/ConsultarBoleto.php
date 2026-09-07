@@ -181,6 +181,9 @@ final class ConsultarBoleto extends Endpoint
             path: "/ailos/cobranca/api/v2/boletos/consultar/boleto/convenios/{$convenio}/{$numero}"
         ));
 
-        return $response->json();
+        /** @var ConsultarBoletoResponse $body */
+        $body = $response->json();
+
+        return $body;
     }
 }

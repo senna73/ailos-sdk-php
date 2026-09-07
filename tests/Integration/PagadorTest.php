@@ -9,13 +9,16 @@ use Ailos\Sdk\Endpoints\Pagador\CadastrarPagador;
 use Ailos\Sdk\Endpoints\Pagador\ListarPagadores;
 use Ailos\Sdk\Tests\IntegrationTestCase;
 
+/**
+ * @phpstan-import-type AlterarPagadorRequest from AlterarPagador
+ */
 class PagadorTest extends IntegrationTestCase
 {
     public function testListarPagadores(): void
     {
-        new ListarPagadores(parent::$context)->handle();
+        $response = new ListarPagadores(parent::$context)->handle();
 
-        $this->addToAssertionCount(1);
+        self::assertArrayHasKey('pagadorResponse', $response);
     }
 
     public function testCadastrarPagador(): void
@@ -32,7 +35,7 @@ class PagadorTest extends IntegrationTestCase
         $this->addToAssertionCount(1);
     }
 
-    /** @return array<string, mixed> */
+    /** @return AlterarPagadorRequest */
     private function pagador(): array
     {
         return [

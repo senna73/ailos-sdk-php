@@ -53,6 +53,9 @@ final class ListarPagadores extends Endpoint
             path: '/ailos/cobranca/api/v1/pagadores/listar'
         ));
 
-        return $response->json();
+        /** @var ListarPagadoresResponse $body */
+        $body = $response->json();
+
+        return $body;
     }
 }
