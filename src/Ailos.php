@@ -8,6 +8,12 @@ use Ailos\Sdk\Auth\Auth;
 use Ailos\Sdk\Auth\Jwt;
 use Ailos\Sdk\Config\AilosContext;
 use Ailos\Sdk\Endpoints\Boleto\ConsultarBoleto;
+use Ailos\Sdk\Endpoints\Boleto\GerarBoleto;
+use Ailos\Sdk\Endpoints\Boleto\GerarLoteBoleto;
+use Ailos\Sdk\Endpoints\Boleto\GerarLoteCarne;
+use Ailos\Sdk\Endpoints\Pagador\AlterarPagador;
+use Ailos\Sdk\Endpoints\Pagador\CadastrarPagador;
+use Ailos\Sdk\Endpoints\Pagador\ListarPagadores;
 
 final class Ailos
 {
@@ -38,8 +44,57 @@ final class Ailos
     /**
      * @return array<string, mixed>
      */
+    public function listarPagadores(): array
+    {
+        return new ListarPagadores($this->context)->handle();
+    }
+
+    /**
+     * @param array<string, mixed> $pagador
+     */
+    public function cadastrarPagador(array $pagador): void
+    {
+        return new CadastrarPagador($this->context)->handle($pagador);
+    }
+
+    /**
+     * @param array<string, mixed> $pagador
+     */
+    public function alterarPagador(array $pagador): void
+    {
+        return new AlterarPagador($this->context)->handle($pagador);
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
     public function consultarBoleto(string $convenio, string $numero): array
     {
         return new ConsultarBoleto($this->context)->handle($convenio, $numero);
     }
+
+    /**
+     * @param array<string, mixed> $boleto
+     */
+    public function gerarBoleto(string $convenio, array $boleto): void
+    {
+        return new GerarBoleto($this->context)->handle($convenio, $boleto);
+    }
+
+    /**
+     * @param array<string, mixed> $lote
+     */
+    public function gerarLoteBoleto(string $convenio, array $lote): void
+    {
+        return new GerarLoteBoleto($this->context)->handle($convenio, $lote);
+    }
+
+    /**
+     * @param array<string, mixed> $lote
+     */
+    public function gerarLoteCarne(string $convenio, array $lote): void
+    {
+        return new GerarLoteCarne($this->context)->handle($convenio, $lote);
+    }
+
 }
