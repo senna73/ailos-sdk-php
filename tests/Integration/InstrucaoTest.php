@@ -12,6 +12,7 @@ use Ailos\Sdk\Endpoints\Instrucao\CancelarEnvioSms;
 use Ailos\Sdk\Endpoints\Instrucao\CancelarNegativacao;
 use Ailos\Sdk\Endpoints\Instrucao\CancelarProtesto;
 use Ailos\Sdk\Endpoints\Instrucao\ConcederAbatimento;
+use Ailos\Sdk\Endpoints\Instrucao\ConcederDesconto;
 use Ailos\Sdk\Endpoints\Instrucao\GerarEnvioSms;
 use Ailos\Sdk\Endpoints\Instrucao\NegativarBoleto;
 use Ailos\Sdk\Endpoints\Instrucao\ProtestoAutomatico;
@@ -24,6 +25,7 @@ use Ailos\Sdk\Tests\IntegrationTestCase;
  * @phpstan-import-type ProtestoAutomaticoRequest from ProtestoAutomatico
  * @phpstan-import-type GerarEnvioSmsRequest from GerarEnvioSms
  * @phpstan-import-type ConcederAbatimentoRequest from ConcederAbatimento
+ * @phpstan-import-type ConcederDescontoRequest from ConcederDesconto
  */
 class InstrucaoTest extends IntegrationTestCase
 {
@@ -65,6 +67,13 @@ class InstrucaoTest extends IntegrationTestCase
     public function testConcederAbatimento(): void
     {
         new ConcederAbatimento(parent::$context)->handle($this->concederAbatimento());
+
+        $this->addToAssertionCount(1);
+    }
+
+    public function testConcederDesconto(): void
+    {
+        new ConcederDesconto(parent::$context)->handle($this->concederDesconto());
 
         $this->addToAssertionCount(1);
     }
@@ -182,6 +191,26 @@ class InstrucaoTest extends IntegrationTestCase
                     'numeroConvenio' => 101004,
                     'numeroBoleto' => 100001,
                     'valorAbatimento' => 10,
+                ],
+            ],
+        ];
+    }
+
+    /** @return ConcederDescontoRequest */
+    private function concederDesconto(): array
+    {
+        return [
+            'boletos' => [
+                [
+                    'numeroConvenio' => 101004,
+                    'numeroBoleto' => 100001,
+                    'tipoDesconto' => 1,
+                    'descontos' => [
+                        [
+                            'valor' => 10,
+                            'diasAteVencimento' => 5,
+                        ],
+                    ],
                 ],
             ],
         ];
