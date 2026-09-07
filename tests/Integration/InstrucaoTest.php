@@ -6,6 +6,7 @@ namespace Ailos\Sdk\Tests\Integration;
 
 use Ailos\Sdk\Endpoints\Instrucao\AnuenciaEletronica;
 use Ailos\Sdk\Endpoints\Instrucao\AlterarFormaEmissao;
+use Ailos\Sdk\Endpoints\Instrucao\CancelarAbatimento;
 use Ailos\Sdk\Endpoints\Instrucao\CancelarEnvioSms;
 use Ailos\Sdk\Endpoints\Instrucao\CancelarNegativacao;
 use Ailos\Sdk\Endpoints\Instrucao\CancelarProtesto;
@@ -40,6 +41,13 @@ class InstrucaoTest extends IntegrationTestCase
     public function testAlterarFormaEmissao(): void
     {
         new AlterarFormaEmissao(parent::$context)->handle($this->alterarFormaEmissao());
+
+        $this->addToAssertionCount(1);
+    }
+
+    public function testCancelarAbatimento(): void
+    {
+        new CancelarAbatimento(parent::$context)->handle($this->instrucoes());
 
         $this->addToAssertionCount(1);
     }

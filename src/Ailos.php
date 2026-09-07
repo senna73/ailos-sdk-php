@@ -13,6 +13,7 @@ use Ailos\Sdk\Endpoints\Emissao\GerarLoteBoleto;
 use Ailos\Sdk\Endpoints\Emissao\GerarLoteCarne;
 use Ailos\Sdk\Endpoints\Instrucao\AnuenciaEletronica;
 use Ailos\Sdk\Endpoints\Instrucao\AlterarFormaEmissao;
+use Ailos\Sdk\Endpoints\Instrucao\CancelarAbatimento;
 use Ailos\Sdk\Endpoints\Instrucao\CancelarNegativacao;
 use Ailos\Sdk\Endpoints\Instrucao\CancelarEnvioSms;
 use Ailos\Sdk\Endpoints\Instrucao\CancelarProtesto;
@@ -36,6 +37,7 @@ use Ailos\Sdk\Endpoints\Pagador\ListarPagadores;
  * @phpstan-import-type GerarLoteCarneRequest from GerarLoteCarne
  * @phpstan-import-type AnuenciaEletronicaRequest from AnuenciaEletronica
  * @phpstan-import-type AlterarFormaEmissaoRequest from AlterarFormaEmissao
+ * @phpstan-import-type CancelarAbatimentoRequest from CancelarAbatimento
  * @phpstan-import-type CancelarNegativacaoRequest from CancelarNegativacao
  * @phpstan-import-type CancelarEnvioSmsRequest from CancelarEnvioSms
  * @phpstan-import-type CancelarProtestoRequest from CancelarProtesto
@@ -152,6 +154,14 @@ final class Ailos
     public function alterarFormaEmissao(array $instrucoes): void
     {
         new AlterarFormaEmissao($this->context)->handle($instrucoes);
+    }
+
+    /**
+     * @param CancelarAbatimentoRequest $instrucoes
+     */
+    public function cancelarAbatimento(array $instrucoes): void
+    {
+        new CancelarAbatimento($this->context)->handle($instrucoes);
     }
 
     /**
