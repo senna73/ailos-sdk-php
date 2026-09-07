@@ -13,11 +13,13 @@ use Ailos\Sdk\Endpoints\Boleto\GerarLoteBoleto;
 use Ailos\Sdk\Endpoints\Boleto\GerarLoteCarne;
 use Ailos\Sdk\Endpoints\Pagador\AlterarPagador;
 use Ailos\Sdk\Endpoints\Pagador\CadastrarPagador;
+use Ailos\Sdk\Endpoints\Pagador\ConsultarPagador;
 use Ailos\Sdk\Endpoints\Pagador\ListarPagadores;
 
 /**
  * @phpstan-import-type CadastrarPagadorRequest from CadastrarPagador
  * @phpstan-import-type AlterarPagadorRequest from AlterarPagador
+ * @phpstan-import-type ConsultarPagadorResponse from ConsultarPagador
  * @phpstan-import-type ListarPagadoresResponse from ListarPagadores
  * @phpstan-import-type GerarBoletoRequest from GerarBoleto
  * @phpstan-import-type ConsultarBoletoResponse from ConsultarBoleto
@@ -52,6 +54,14 @@ final class Ailos
     public function listarPagadores(): array
     {
         return new ListarPagadores($this->context)->handle();
+    }
+
+    /**
+     * @return ConsultarPagadorResponse
+     */
+    public function consultarPagador(string $documento): array
+    {
+        return new ConsultarPagador($this->context)->handle($documento);
     }
 
     /**

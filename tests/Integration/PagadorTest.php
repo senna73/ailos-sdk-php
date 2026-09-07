@@ -6,6 +6,7 @@ namespace Ailos\Sdk\Tests\Integration;
 
 use Ailos\Sdk\Endpoints\Pagador\AlterarPagador;
 use Ailos\Sdk\Endpoints\Pagador\CadastrarPagador;
+use Ailos\Sdk\Endpoints\Pagador\ConsultarPagador;
 use Ailos\Sdk\Endpoints\Pagador\ListarPagadores;
 use Ailos\Sdk\Tests\IntegrationTestCase;
 
@@ -17,6 +18,13 @@ class PagadorTest extends IntegrationTestCase
     public function testListarPagadores(): void
     {
         $response = new ListarPagadores(parent::$context)->handle();
+
+        self::assertArrayHasKey('pagadorResponse', $response);
+    }
+
+    public function testConsultarPagador(): void
+    {
+        $response = new ConsultarPagador(parent::$context)->handle('00384870000101');
 
         self::assertArrayHasKey('pagadorResponse', $response);
     }
