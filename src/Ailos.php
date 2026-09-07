@@ -16,6 +16,7 @@ use Ailos\Sdk\Endpoints\Instrucao\AlterarFormaEmissao;
 use Ailos\Sdk\Endpoints\Instrucao\CancelarNegativacao;
 use Ailos\Sdk\Endpoints\Instrucao\CancelarEnvioSms;
 use Ailos\Sdk\Endpoints\Instrucao\CancelarProtesto;
+use Ailos\Sdk\Endpoints\Instrucao\GerarEnvioSms;
 use Ailos\Sdk\Endpoints\Instrucao\NegativarBoleto;
 use Ailos\Sdk\Endpoints\Instrucao\ProtestoAutomatico;
 use Ailos\Sdk\Endpoints\Instrucao\ProtestarBoleto;
@@ -38,6 +39,7 @@ use Ailos\Sdk\Endpoints\Pagador\ListarPagadores;
  * @phpstan-import-type CancelarNegativacaoRequest from CancelarNegativacao
  * @phpstan-import-type CancelarEnvioSmsRequest from CancelarEnvioSms
  * @phpstan-import-type CancelarProtestoRequest from CancelarProtesto
+ * @phpstan-import-type GerarEnvioSmsRequest from GerarEnvioSms
  * @phpstan-import-type NegativarBoletoRequest from NegativarBoleto
  * @phpstan-import-type ProtestoAutomaticoRequest from ProtestoAutomatico
  * @phpstan-import-type ProtestarBoletoRequest from ProtestarBoleto
@@ -158,6 +160,14 @@ final class Ailos
     public function cancelarEnvioSms(array $instrucoes): void
     {
         new CancelarEnvioSms($this->context)->handle($instrucoes);
+    }
+
+    /**
+     * @param GerarEnvioSmsRequest $instrucoes
+     */
+    public function gerarEnvioSms(array $instrucoes): void
+    {
+        new GerarEnvioSms($this->context)->handle($instrucoes);
     }
 
     /**

@@ -9,6 +9,7 @@ use Ailos\Sdk\Endpoints\Instrucao\AlterarFormaEmissao;
 use Ailos\Sdk\Endpoints\Instrucao\CancelarEnvioSms;
 use Ailos\Sdk\Endpoints\Instrucao\CancelarNegativacao;
 use Ailos\Sdk\Endpoints\Instrucao\CancelarProtesto;
+use Ailos\Sdk\Endpoints\Instrucao\GerarEnvioSms;
 use Ailos\Sdk\Endpoints\Instrucao\NegativarBoleto;
 use Ailos\Sdk\Endpoints\Instrucao\ProtestoAutomatico;
 use Ailos\Sdk\Endpoints\Instrucao\ProtestarBoleto;
@@ -18,6 +19,7 @@ use Ailos\Sdk\Tests\IntegrationTestCase;
  * @phpstan-import-type CancelarNegativacaoRequest from CancelarNegativacao
  * @phpstan-import-type AlterarFormaEmissaoRequest from AlterarFormaEmissao
  * @phpstan-import-type ProtestoAutomaticoRequest from ProtestoAutomatico
+ * @phpstan-import-type GerarEnvioSmsRequest from GerarEnvioSms
  */
 class InstrucaoTest extends IntegrationTestCase
 {
@@ -45,6 +47,13 @@ class InstrucaoTest extends IntegrationTestCase
     public function testCancelarEnvioSms(): void
     {
         new CancelarEnvioSms(parent::$context)->handle($this->instrucoes());
+
+        $this->addToAssertionCount(1);
+    }
+
+    public function testGerarEnvioSms(): void
+    {
+        new GerarEnvioSms(parent::$context)->handle($this->gerarEnvioSms());
 
         $this->addToAssertionCount(1);
     }
@@ -114,6 +123,25 @@ class InstrucaoTest extends IntegrationTestCase
                     'numeroBoleto' => 100001,
                     'emissao' => [
                         'forma' => 1,
+                    ],
+                ],
+            ],
+        ];
+    }
+
+    /** @return GerarEnvioSmsRequest */
+    private function gerarEnvioSms(): array
+    {
+        return [
+            'boletos' => [
+                [
+                    'numeroConvenio' => 101004,
+                    'numeroBoleto' => 100001,
+                    'tipoEnvio' => 1,
+                    'telefone' => [
+                        'ddi' => '55',
+                        'ddd' => '47',
+                        'numero' => '999887766',
                     ],
                 ],
             ],
