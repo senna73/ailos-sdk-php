@@ -2,18 +2,18 @@
 
 declare(strict_types=1);
 
-namespace Ailos\Sdk\Tests\Integration;
+namespace Ailos\Sdk\Tests\Integration\Cobranca;
 
 use Ailos\Sdk\Cobranca\Endpoints\Webhook\CadastrarWebhook;
-use Ailos\Sdk\Endpoints\Webhook\ConsultarWebhook;
+use Ailos\Sdk\Cobranca\Endpoints\Webhook\ConsultarWebhook;
 use Ailos\Sdk\Cobranca\Endpoints\Webhook\ExcluirWebhook;
 use Ailos\Sdk\Cobranca\Endpoints\Webhook\ListarWebhooks;
-use Ailos\Sdk\Tests\IntegrationTestCase;
+use Ailos\Sdk\Tests\CobrancaTestCase;
 
 /**
  * @phpstan-import-type CadastrarWebhookRequest from CadastrarWebhook
  */
-class WebhookTest extends IntegrationTestCase
+class WebhookTest extends CobrancaTestCase
 {
     public function testCadastrarWebhook(): void
     {

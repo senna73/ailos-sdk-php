@@ -2,18 +2,18 @@
 
 declare(strict_types=1);
 
-namespace Ailos\Sdk\Tests\Integration;
+namespace Ailos\Sdk\Tests\Integration\Cobranca;
 
 use Ailos\Sdk\Cobranca\Endpoints\Pagador\AlterarPagador;
-use Ailos\Sdk\Endpoints\Pagador\CadastrarPagador;
+use Ailos\Sdk\Cobranca\Endpoints\Pagador\CadastrarPagador;
 use Ailos\Sdk\Cobranca\Endpoints\Pagador\ConsultarPagador;
 use Ailos\Sdk\Cobranca\Endpoints\Pagador\ListarPagadores;
-use Ailos\Sdk\Tests\IntegrationTestCase;
+use Ailos\Sdk\Tests\CobrancaTestCase;
 
 /**
  * @phpstan-import-type AlterarPagadorRequest from AlterarPagador
  */
-class PagadorTest extends IntegrationTestCase
+class PagadorTest extends CobrancaTestCase
 {
     public function testListarPagadores(): void
     {

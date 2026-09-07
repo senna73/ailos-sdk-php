@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Ailos\Sdk\Tests\Integration;
+namespace Ailos\Sdk\Tests\Integration\Cobranca;
 
 use Ailos\Sdk\Cobranca\Endpoints\Instrucao\AnuenciaEletronica;
 use Ailos\Sdk\Cobranca\Endpoints\Instrucao\AlterarFormaEmissao;
@@ -19,7 +19,7 @@ use Ailos\Sdk\Cobranca\Endpoints\Instrucao\GerarEnvioSms;
 use Ailos\Sdk\Cobranca\Endpoints\Instrucao\NegativarBoleto;
 use Ailos\Sdk\Cobranca\Endpoints\Instrucao\ProtestoAutomatico;
 use Ailos\Sdk\Cobranca\Endpoints\Instrucao\ProtestarBoleto;
-use Ailos\Sdk\Tests\IntegrationTestCase;
+use Ailos\Sdk\Tests\CobrancaTestCase;
 
 /**
  * @phpstan-import-type CancelarNegativacaoRequest from CancelarNegativacao
@@ -30,7 +30,7 @@ use Ailos\Sdk\Tests\IntegrationTestCase;
  * @phpstan-import-type ConcederAbatimentoRequest from ConcederAbatimento
  * @phpstan-import-type ConcederDescontoRequest from ConcederDesconto
  */
-class InstrucaoTest extends IntegrationTestCase
+class InstrucaoTest extends CobrancaTestCase
 {
     public function testCancelarNegativacao(): void
     {

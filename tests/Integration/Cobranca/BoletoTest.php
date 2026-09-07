@@ -2,18 +2,18 @@
 
 declare(strict_types=1);
 
-namespace Ailos\Sdk\Tests\Integration;
+namespace Ailos\Sdk\Tests\Integration\Cobranca;
 
 use Ailos\Sdk\Cobranca\Endpoints\Emissao\ConsultarBoleto;
 use Ailos\Sdk\Cobranca\Endpoints\Emissao\GerarBoleto;
 use Ailos\Sdk\Cobranca\Endpoints\Emissao\GerarLoteBoleto;
 use Ailos\Sdk\Cobranca\Endpoints\Emissao\GerarLoteCarne;
-use Ailos\Sdk\Tests\IntegrationTestCase;
+use Ailos\Sdk\Tests\CobrancaTestCase;
 
 /**
  * @phpstan-import-type GerarBoletoRequest from GerarBoleto
  */
-class BoletoTest extends IntegrationTestCase
+class BoletoTest extends CobrancaTestCase
 {
     private const string CONVENIO = '101004';
 

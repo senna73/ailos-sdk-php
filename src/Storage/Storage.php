@@ -6,7 +6,7 @@ namespace Ailos\Sdk\Storage;
 
 use RuntimeException;
 
-final class TokenStorage implements IStorage
+final class Storage implements IStorage
 {
     public function __construct()
     {

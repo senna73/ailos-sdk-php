@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Ailos\Sdk\Tests\Integration;
+namespace Ailos\Sdk\Tests\Integration\Cobranca;
 
 use Ailos\Sdk\Cobranca\Auth\AccessToken;
 use Ailos\Sdk\Cobranca\Auth\Auth;
 use Ailos\Sdk\Cobranca\Auth\Jwt;
-use Ailos\Sdk\Tests\IntegrationTestCase;
+use Ailos\Sdk\Tests\CobrancaTestCase;
 
-class AuthManagerTest extends IntegrationTestCase
+class AuthManagerTest extends CobrancaTestCase
 {
     protected function setUp(): void
     {

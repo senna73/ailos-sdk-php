@@ -7,7 +7,7 @@ namespace Ailos\Sdk\Cobranca\Context;
 use Ailos\Sdk\Http\CurlHttp;
 use Ailos\Sdk\Http\IHttp;
 use Ailos\Sdk\Storage\IStorage;
-use Ailos\Sdk\Storage\TokenStorage;
+use Ailos\Sdk\Storage\Storage;
 use InvalidArgumentException;
 
 final class CobrancaContext
@@ -28,7 +28,7 @@ final class CobrancaContext
         public readonly string $codigoConta,
         public readonly string $senha,
         public readonly string $ambiente = 'homol',
-        public readonly IStorage $storage = new TokenStorage(),
+        public readonly IStorage $storage = new Storage(),
         public readonly IHttp $http = new CurlHttp(),
         public readonly bool $catcherService = false,
         public readonly ?string $catcherUrl = null,

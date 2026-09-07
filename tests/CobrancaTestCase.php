@@ -4,21 +4,21 @@ declare(strict_types=1);
 
 namespace Ailos\Sdk\Tests;
 
-use Ailos\Sdk\Config\AilosContext;
+use Ailos\Sdk\Cobranca\Context\CobrancaContext;
 use Ailos\Sdk\Env\Env;
-use Ailos\Sdk\Config\Environment;
-use Ailos\Sdk\Config\SdkConfig;
+use Ailos\Sdk\Http\CurlHttp;
+use Ailos\Sdk\Storage\Storage;
 use PHPUnit\Framework\TestCase;
 
-abstract class IntegrationTestCase extends TestCase
+abstract class CobrancaTestCase extends TestCase
 {
-    public static AilosContext $context;
+    public static CobrancaContext $context;
 
     public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
 
-        $environment = new Environment(
+        self::$context = new CobrancaContext(
             Env::requiredEnv('AILOS_CONSUMER_KEY'),
             Env::requiredEnv('AILOS_CONSUMER_SECRET'),
             Env::requiredEnv('AILOS_URL_CALLBACK'),
@@ -26,15 +26,12 @@ abstract class IntegrationTestCase extends TestCase
             Env::requiredEnv('AILOS_CODIGO_COOPERATIVA'),
             Env::requiredEnv('AILOS_CODIGO_CONTA'),
             Env::requiredEnv('AILOS_SENHA'),
-            'homol'
+            'homol',
+            new Storage(),
+            new CurlHttp(),
+            true,
+            Env::requiredEnv('CATCHER_URL'),
+            Env::requiredEnv('CATCHER_SECRET')
         );
-
-        $config = new SdkConfig(
-            catcherService: true,
-            catcherUrl: Env::requiredEnv('CATCHER_URL'),
-            catcherSecret: Env::requiredEnv('CATCHER_SECRET'),
-        );
-
-        self::$context = new AilosContext($environment, $config);
     }
 }
