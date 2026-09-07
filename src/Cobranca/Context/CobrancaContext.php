@@ -2,11 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Ailos\Sdk\Config;
+namespace Ailos\Sdk\Cobranca\Context;
 
+use Ailos\Sdk\Http\CurlHttp;
+use Ailos\Sdk\Http\IHttp;
+use Ailos\Sdk\Storage\IStorage;
+use Ailos\Sdk\Storage\TokenStorage;
 use InvalidArgumentException;
 
-final class Environment
+final class CobrancaContext
 {
     private const array URLS = [
         'homol' => 'https://apiendpointhml.ailos.coop.br',
@@ -23,7 +27,12 @@ final class Environment
         public readonly string $codigoCooperativa,
         public readonly string $codigoConta,
         public readonly string $senha,
-        public readonly string $ambiente = 'homol'
+        public readonly string $ambiente = 'homol',
+        public readonly IStorage $storage = new TokenStorage(),
+        public readonly IHttp $http = new CurlHttp(),
+        public readonly bool $catcherService = false,
+        public readonly ?string $catcherUrl = null,
+        public readonly ?string $catcherSecret = null
     ) {
         if (!array_key_exists($this->ambiente, self::URLS)) {
             throw new InvalidArgumentException(

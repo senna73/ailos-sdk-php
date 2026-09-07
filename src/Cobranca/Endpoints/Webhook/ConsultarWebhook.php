@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Ailos\Sdk\Cobranca\Endpoints\Webhook;
 
-use Ailos\Sdk\Http\Endpoint;
+use Ailos\Sdk\Cobranca\Endpoints\Endpoint;
 use Ailos\Sdk\Http\Request;
 
 final class ConsultarWebhook extends Endpoint

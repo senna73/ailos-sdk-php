@@ -4,19 +4,19 @@ declare(strict_types=1);
 
 namespace Ailos\Sdk\Cobranca\Auth;
 
-use Ailos\Sdk\Config\AilosContext;
+use Ailos\Sdk\Cobranca\Context\CobrancaContext;
 use Ailos\Sdk\Http\Request;
 use DomainException;
 
 final class Auth
 {
-    public function __construct(private AilosContext $context)
+    public function __construct(private CobrancaContext $context)
     {
     }
 
     public function getAccessToken(): ?AccessToken
     {
-        $accessToken = $this->context->config->storage->get('access_token');
+        $accessToken = $this->context->storage->get('access_token');
 
         if ($accessToken !== null && !($accessToken instanceof AccessToken)) {
             throw new DomainException('Tipo de access token armazenado incorreto');
@@ -27,17 +27,17 @@ final class Auth
 
     public function setAccessToken(AccessToken $accessToken): void
     {
-        $this->context->config->storage->set('access_token', $accessToken, $accessToken->expiresIn);
+        $this->context->storage->set('access_token', $accessToken, $accessToken->expiresIn);
     }
 
     public function deleteAccessToken(): void
     {
-        $this->context->config->storage->delete('access_token');
+        $this->context->storage->delete('access_token');
     }
 
     public function getId(): ?string
     {
-        $id = $this->context->config->storage->get('id');
+        $id = $this->context->storage->get('id');
 
         if ($id !== null && !is_string($id)) {
             throw new DomainException('Tipo de ID armazenado incorreto');
@@ -48,17 +48,17 @@ final class Auth
 
     public function setId(string $id): void
     {
-        $this->context->config->storage->set('id', $id, 3600);
+        $this->context->storage->set('id', $id, 3600);
     }
 
     public function deleteId(): void
     {
-        $this->context->config->storage->delete('id');
+        $this->context->storage->delete('id');
     }
 
     public function getState(): ?string
     {
-        $state = $this->context->config->storage->get('state');
+        $state = $this->context->storage->get('state');
 
         if ($state !== null && !is_string($state)) {
             throw new DomainException('Tipo de estado armazenado incorreto');
@@ -69,17 +69,17 @@ final class Auth
 
     public function setState(string $state): void
     {
-        $this->context->config->storage->set('state', $state, 3600);
+        $this->context->storage->set('state', $state, 3600);
     }
 
     public function deleteState(): void
     {
-        $this->context->config->storage->delete('state');
+        $this->context->storage->delete('state');
     }
 
     public function getJwt(): ?Jwt
     {
-        $jwt = $this->context->config->storage->get('jwt');
+        $jwt = $this->context->storage->get('jwt');
 
         if ($jwt !== null && !($jwt instanceof Jwt)) {
             throw new DomainException('Tipo de JWT armazenado incorreto');
@@ -90,12 +90,12 @@ final class Auth
 
     public function setJwt(Jwt $jwt): void
     {
-        $this->context->config->storage->set('jwt', $jwt, 3600);
+        $this->context->storage->set('jwt', $jwt, 3600);
     }
 
     public function deleteJwt(): void
     {
-        $this->context->config->storage->delete('jwt');
+        $this->context->storage->delete('jwt');
     }
 
     public function auth(): void
@@ -121,7 +121,7 @@ final class Auth
          */
         if ($jwt === null) {
             $this->requestJwt($accessToken, $id);
-            $jwt = $this->context->config->catcherService ? $this->waitForJwtViaCatcher() : $this->waitForJwtViaStorage();
+            $jwt = $this->context->catcherService ? $this->waitForJwtViaCatcher() : $this->waitForJwtViaStorage();
 
             $this->setJwt($jwt);
         }
@@ -171,11 +171,11 @@ final class Auth
     private function requestAccessToken(): AccessToken
     {
         $authorization = 'Basic ' . base64_encode(
-            "{$this->context->environment->consumerKey}:{$this->context->environment->consumerSecret}"
+            "{$this->context->consumerKey}:{$this->context->consumerSecret}"
         );
 
         $request = new Request(
-            path: $this->context->environment->baseUrl . '/token',
+            path: $this->context->baseUrl . '/token',
             headers: [
                 'Authorization' => $authorization,
                 'Content-Type' => 'application/x-www-form-urlencoded',
@@ -185,7 +185,7 @@ final class Auth
             ]
         );
 
-        $response = $this->context->config->http->post($request);
+        $response = $this->context->http->post($request);
 
         return AccessToken::fromArray($response->json());
     }
@@ -197,38 +197,38 @@ final class Auth
         $this->setState($state);
 
         $request = new Request(
-            path: $this->context->environment->baseUrl . '/ailos/identity/api/v1/autenticacao/login/obter/id',
+            path: $this->context->baseUrl . '/ailos/identity/api/v1/autenticacao/login/obter/id',
             headers: [
                 'Content-Type' => 'application/json',
                 'Accept' => 'text/plain',
                 'Authorization' => 'Bearer ' . $accessToken->accessToken,
             ],
             body: [
-                'urlCallback' => $this->context->environment->urlCallback,
-                'ailosApiKeyDeveloper' => $this->context->environment->developerKey,
+                'urlCallback' => $this->context->urlCallback,
+                'ailosApiKeyDeveloper' => $this->context->developerKey,
                 'state' => $state,
             ]
         );
 
-        return $this->context->config->http->post($request)->text();
+        return $this->context->http->post($request)->text();
     }
 
     private function requestJwt(AccessToken $accessToken, string $id): void
     {
         $request = new Request(
-            path: $this->context->environment->baseUrl . '/ailos/identity/api/v1/login/index?id=' . rawurlencode($id),
+            path: $this->context->baseUrl . '/ailos/identity/api/v1/login/index?id=' . rawurlencode($id),
             headers: [
                 'Authorization' => 'Bearer ' . $accessToken->accessToken,
                 'Content-Type' => 'application/x-www-form-urlencoded',
             ],
             body: [
-                'Login.CodigoCooperativa' => $this->context->environment->codigoCooperativa,
-                'Login.CodigoConta' => $this->context->environment->codigoConta,
-                'Login.Senha' => $this->context->environment->senha,
+                'Login.CodigoCooperativa' => $this->context->codigoCooperativa,
+                'Login.CodigoConta' => $this->context->codigoConta,
+                'Login.Senha' => $this->context->senha,
             ]
         );
 
-        $response = $this->context->config->http->post($request)->text();
+        $response = $this->context->http->post($request)->text();
 
         if ($response === '') {
             throw new \RuntimeException('Resposta vazia ao tentar gerar o JWT.');
@@ -272,7 +272,7 @@ final class Auth
             throw new \RuntimeException('Estado não gerado. Chame o método auth() antes de aguardar o JWT.');
         }
 
-        $catcherUrl = $this->context->config->catcherUrl;
+        $catcherUrl = $this->context->catcherUrl;
 
         if ($catcherUrl === null) {
             throw new \RuntimeException('URL do catcher não configurada.');
@@ -281,14 +281,14 @@ final class Auth
         $request = new Request(
             path: $catcherUrl,
             headers: [
-                'X-Catcher-Secret' => (string) $this->context->config->catcherSecret,
+                'X-Catcher-Secret' => (string) $this->context->catcherSecret,
             ],
             query: [
                 'state' => $state,
             ]
         );
 
-        $response = $this->context->config->http->get($request)->json();
+        $response = $this->context->http->get($request)->json();
 
         if ($response['code'] == null) {
             return null;
@@ -303,13 +303,13 @@ final class Auth
     private function requestJwtRefresh(AccessToken $accessToken, Jwt $jwt): Jwt
     {
         $request = new Request(
-            path: $this->context->environment->baseUrl . "/ailos/identity/api/v1/autenticacao/token/refresh?code={$jwt->code}",
+            path: $this->context->baseUrl . "/ailos/identity/api/v1/autenticacao/token/refresh?code={$jwt->code}",
             headers: [
                 'Authorization' => 'Bearer ' . $accessToken->accessToken,
             ]
         );
 
-        $response = $this->context->config->http->get($request)->text();
+        $response = $this->context->http->get($request)->text();
 
         return new Jwt($jwt->state, $response);
     }

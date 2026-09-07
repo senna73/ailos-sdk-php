@@ -2,41 +2,45 @@
 
 declare(strict_types=1);
 
-namespace Ailos\Sdk\Http;
+namespace Ailos\Sdk\Cobranca\Endpoints;
 
 use Ailos\Sdk\Cobranca\Auth\Auth;
-use Ailos\Sdk\Config\AilosContext;
+use Ailos\Sdk\Cobranca\Context\CobrancaContext;
+use Ailos\Sdk\Http\IHttp;
+use Ailos\Sdk\Http\Request;
+use Ailos\Sdk\Http\Response;
 
-final class CobrancaAuthenticatedHttp implements IHttp
+abstract class Endpoint implements IHttp
 {
-    public function __construct(private readonly AilosContext $context)
-    {
+    public function __construct(
+        public readonly CobrancaContext $context,
+    ) {
     }
 
     public function get(Request $request): Response
     {
-        return $this->context->config->http->get($this->authenticate($request));
+        return $this->context->http->get($this->authenticate($request));
     }
 
     public function post(Request $request): Response
     {
-        return $this->context->config->http->post($this->authenticate($request));
+        return $this->context->http->post($this->authenticate($request));
     }
 
     public function put(Request $request): Response
     {
-        return $this->context->config->http->put($this->authenticate($request));
+        return $this->context->http->put($this->authenticate($request));
     }
 
     public function delete(Request $request): Response
     {
-        return $this->context->config->http->delete($this->authenticate($request));
+        return $this->context->http->delete($this->authenticate($request));
     }
 
     private function authenticate(Request $request): Request
     {
         $request = $request->withPath(
-            $this->context->environment->baseUrl . $request->path
+            $this->context->baseUrl . $request->path
         );
 
         $auth = new Auth($this->context);

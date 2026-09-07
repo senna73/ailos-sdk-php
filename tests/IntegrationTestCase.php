@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Ailos\Sdk\Tests;
 
 use Ailos\Sdk\Config\AilosContext;
-use Ailos\Sdk\Config\Env;
+use Ailos\Sdk\Env\Env;
 use Ailos\Sdk\Config\Environment;
 use Ailos\Sdk\Config\SdkConfig;
 use PHPUnit\Framework\TestCase;

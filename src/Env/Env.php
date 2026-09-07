@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Ailos\Sdk\Config;
+namespace Ailos\Sdk\Env;
 
 use Dotenv\Dotenv;
 use Dotenv\Repository\RepositoryBuilder;
