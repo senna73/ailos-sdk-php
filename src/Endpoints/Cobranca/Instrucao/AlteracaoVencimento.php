@@ -2,29 +2,31 @@
 
 declare(strict_types=1);
 
-namespace Ailos\Sdk\Endpoints\Instrucao;
+namespace Ailos\Sdk\Endpoints\Cobranca\Instrucao;
 
 use Ailos\Sdk\Endpoints\Endpoint;
 use Ailos\Sdk\Http\Request;
 
 /**
- * @phpstan-type ConcederAbatimentoRequest array{
+ * @phpstan-type AlteracaoVencimentoRequest array{
  *     boletos: list<array{
  *         numeroConvenio: int,
  *         numeroBoleto: int,
- *         valorAbatimento: int
+ *         vencimento: array{
+ *             dataVencimento: string
+ *         }
  *     }>
  * }
  */
-final class ConcederAbatimento extends Endpoint
+final class AlteracaoVencimento extends Endpoint
 {
     /**
-     * @param ConcederAbatimentoRequest $instrucoes
+     * @param AlteracaoVencimentoRequest $instrucoes
      */
     public function handle(array $instrucoes): void
     {
         $this->post(new Request(
-            path: '/ailos/cobranca/api/v1/boletos/abatimento/lote',
+            path: '/ailos/cobranca/api/v1/boletos/vencimento/lote',
             body: $instrucoes
         ));
     }

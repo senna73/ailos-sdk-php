@@ -4,21 +4,21 @@ declare(strict_types=1);
 
 namespace Ailos\Sdk\Tests\Integration;
 
-use Ailos\Sdk\Endpoints\Instrucao\AnuenciaEletronica;
-use Ailos\Sdk\Endpoints\Instrucao\AlterarFormaEmissao;
-use Ailos\Sdk\Endpoints\Instrucao\AlteracaoVencimento;
-use Ailos\Sdk\Endpoints\Instrucao\Baixa;
-use Ailos\Sdk\Endpoints\Instrucao\CancelarAbatimento;
-use Ailos\Sdk\Endpoints\Instrucao\CancelarDescontos;
-use Ailos\Sdk\Endpoints\Instrucao\CancelarEnvioSms;
-use Ailos\Sdk\Endpoints\Instrucao\CancelarNegativacao;
-use Ailos\Sdk\Endpoints\Instrucao\CancelarProtesto;
-use Ailos\Sdk\Endpoints\Instrucao\ConcederAbatimento;
-use Ailos\Sdk\Endpoints\Instrucao\ConcederDesconto;
-use Ailos\Sdk\Endpoints\Instrucao\GerarEnvioSms;
-use Ailos\Sdk\Endpoints\Instrucao\NegativarBoleto;
-use Ailos\Sdk\Endpoints\Instrucao\ProtestoAutomatico;
-use Ailos\Sdk\Endpoints\Instrucao\ProtestarBoleto;
+use Ailos\Sdk\Endpoints\Cobranca\Instrucao\AnuenciaEletronica;
+use Ailos\Sdk\Endpoints\Cobranca\Instrucao\AlterarFormaEmissao;
+use Ailos\Sdk\Endpoints\Cobranca\Instrucao\AlteracaoVencimento;
+use Ailos\Sdk\Endpoints\Cobranca\Instrucao\Baixa;
+use Ailos\Sdk\Endpoints\Cobranca\Instrucao\CancelarAbatimento;
+use Ailos\Sdk\Endpoints\Cobranca\Instrucao\CancelarDescontos;
+use Ailos\Sdk\Endpoints\Cobranca\Instrucao\CancelarEnvioSms;
+use Ailos\Sdk\Endpoints\Cobranca\Instrucao\CancelarNegativacao;
+use Ailos\Sdk\Endpoints\Cobranca\Instrucao\CancelarProtesto;
+use Ailos\Sdk\Endpoints\Cobranca\Instrucao\ConcederAbatimento;
+use Ailos\Sdk\Endpoints\Cobranca\Instrucao\ConcederDesconto;
+use Ailos\Sdk\Endpoints\Cobranca\Instrucao\GerarEnvioSms;
+use Ailos\Sdk\Endpoints\Cobranca\Instrucao\NegativarBoleto;
+use Ailos\Sdk\Endpoints\Cobranca\Instrucao\ProtestoAutomatico;
+use Ailos\Sdk\Endpoints\Cobranca\Instrucao\ProtestarBoleto;
 use Ailos\Sdk\Tests\IntegrationTestCase;
 
 /**

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Ailos\Sdk\Endpoints\Instrucao;
+namespace Ailos\Sdk\Endpoints\Cobranca\Instrucao;
 
 use Ailos\Sdk\Endpoints\Endpoint;
 use Ailos\Sdk\Http\Request;

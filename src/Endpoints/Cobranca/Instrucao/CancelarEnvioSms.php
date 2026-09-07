@@ -2,28 +2,28 @@
 
 declare(strict_types=1);
 
-namespace Ailos\Sdk\Endpoints\Instrucao;
+namespace Ailos\Sdk\Endpoints\Cobranca\Instrucao;
 
 use Ailos\Sdk\Endpoints\Endpoint;
 use Ailos\Sdk\Http\Request;
 
 /**
- * @phpstan-type CancelarNegativacaoRequest array{
+ * @phpstan-type CancelarEnvioSmsRequest array{
  *     boletos: list<array{
  *         numeroConvenio: int,
  *         numeroBoleto: int
  *     }>
  * }
  */
-final class CancelarNegativacao extends Endpoint
+final class CancelarEnvioSms extends Endpoint
 {
     /**
-     * @param CancelarNegativacaoRequest $instrucoes
+     * @param CancelarEnvioSmsRequest $instrucoes
      */
     public function handle(array $instrucoes): void
     {
         $this->delete(new Request(
-            path: '/ailos/cobranca/api/v1/boletos/negativacao/lote',
+            path: '/ailos/cobranca/api/v1/boletos/aviso-sms/lote',
             body: $instrucoes
         ));
     }

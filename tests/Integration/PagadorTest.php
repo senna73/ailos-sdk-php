@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Ailos\Sdk\Tests\Integration;
 
-use Ailos\Sdk\Endpoints\Pagador\AlterarPagador;
+use Ailos\Sdk\Endpoints\Cobranca\Pagador\AlterarPagador;
 use Ailos\Sdk\Endpoints\Pagador\CadastrarPagador;
-use Ailos\Sdk\Endpoints\Pagador\ConsultarPagador;
-use Ailos\Sdk\Endpoints\Pagador\ListarPagadores;
+use Ailos\Sdk\Endpoints\Cobranca\Pagador\ConsultarPagador;
+use Ailos\Sdk\Endpoints\Cobranca\Pagador\ListarPagadores;
 use Ailos\Sdk\Tests\IntegrationTestCase;
 
 /**

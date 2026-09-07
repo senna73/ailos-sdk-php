@@ -2,21 +2,20 @@
 
 declare(strict_types=1);
 
-namespace Ailos\Sdk\Endpoints\Webhook;
+namespace Ailos\Sdk\Endpoints\Cobranca\Webhook;
 
 use Ailos\Sdk\Endpoints\Endpoint;
 use Ailos\Sdk\Http\Request;
 
-final class ListarWebhooks extends Endpoint
+final class ConsultarWebhook extends Endpoint
 {
     /**
      * @return array<string, mixed>
      */
-    public function handle(int $evento): array
+    public function handle(string $identificador): array
     {
         $response = $this->get(new Request(
-            path: '/ailos/cobranca/api/v2/webhooks/',
-            query: ['evento' => $evento]
+            path: "/ailos/cobranca/api/v2/webhooks/{$identificador}"
         ));
 
         return $response->json();

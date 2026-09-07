@@ -2,28 +2,28 @@
 
 declare(strict_types=1);
 
-namespace Ailos\Sdk\Endpoints\Instrucao;
+namespace Ailos\Sdk\Endpoints\Cobranca\Instrucao;
 
 use Ailos\Sdk\Endpoints\Endpoint;
 use Ailos\Sdk\Http\Request;
 
 /**
- * @phpstan-type ProtestarBoletoRequest array{
+ * @phpstan-type BaixaRequest array{
  *     boletos: list<array{
  *         numeroConvenio: int,
  *         numeroBoleto: int
  *     }>
  * }
  */
-final class ProtestarBoleto extends Endpoint
+final class Baixa extends Endpoint
 {
     /**
-     * @param ProtestarBoletoRequest $instrucoes
+     * @param BaixaRequest $instrucoes
      */
     public function handle(array $instrucoes): void
     {
-        $this->post(new Request(
-            path: '/ailos/cobranca/api/v1/boletos/protesto/lote',
+        $this->delete(new Request(
+            path: '/ailos/cobranca/api/v1/boletos/lote',
             body: $instrucoes
         ));
     }

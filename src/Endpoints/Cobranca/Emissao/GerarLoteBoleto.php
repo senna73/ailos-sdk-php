@@ -2,17 +2,17 @@
 
 declare(strict_types=1);
 
-namespace Ailos\Sdk\Endpoints\Emissao;
+namespace Ailos\Sdk\Endpoints\Cobranca\Emissao;
 
 use Ailos\Sdk\Endpoints\Endpoint;
 use Ailos\Sdk\Http\Request;
 
 /**
- * @phpstan-type GerarLoteCarneRequest array{
+ * @phpstan-type GerarLoteBoletoRequest array{
  *     convenioCobranca: array{
  *         codigoCarteiraCobranca: int
  *     },
- *     carnes: list<array{
+ *     boletos: list<array{
  *         convenioCobranca: array{
  *             codigoCarteiraCobranca: int
  *         },
@@ -87,25 +87,19 @@ use Ailos\Sdk\Http\Request;
  *                 nome: string
  *             }
  *         },
- *         indicadorRegistroNuclea: int,
- *         numeroParcela: int,
- *         tipoVencimento: array{
- *             tipoVencimento: int,
- *             quantidadeXDias: int,
- *             diaXDeCadaMes: int
- *         }
+ *         indicadorRegistroNuclea: int
  *     }>
  * }
  */
-final class GerarLoteCarne extends Endpoint
+final class GerarLoteBoleto extends Endpoint
 {
     /**
-     * @param GerarLoteCarneRequest $lote
+     * @param GerarLoteBoletoRequest $lote
      */
     public function handle(string $convenio, array $lote): void
     {
         $this->post(new Request(
-            path: "/ailos/cobranca/api/v2/boletos/gerar/carne/lote/convenios/{$convenio}",
+            path: "/ailos/cobranca/api/v2/boletos/gerar/lote/convenios/{$convenio}",
             body: $lote
         ));
     }
