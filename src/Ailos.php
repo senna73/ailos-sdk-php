@@ -13,6 +13,7 @@ use Ailos\Sdk\Endpoints\Emissao\GerarLoteBoleto;
 use Ailos\Sdk\Endpoints\Emissao\GerarLoteCarne;
 use Ailos\Sdk\Endpoints\Instrucao\AnuenciaEletronica;
 use Ailos\Sdk\Endpoints\Instrucao\CancelarNegativacao;
+use Ailos\Sdk\Endpoints\Instrucao\CancelarProtesto;
 use Ailos\Sdk\Endpoints\Instrucao\NegativarBoleto;
 use Ailos\Sdk\Endpoints\Pagador\AlterarPagador;
 use Ailos\Sdk\Endpoints\Pagador\CadastrarPagador;
@@ -30,6 +31,7 @@ use Ailos\Sdk\Endpoints\Pagador\ListarPagadores;
  * @phpstan-import-type GerarLoteCarneRequest from GerarLoteCarne
  * @phpstan-import-type AnuenciaEletronicaRequest from AnuenciaEletronica
  * @phpstan-import-type CancelarNegativacaoRequest from CancelarNegativacao
+ * @phpstan-import-type CancelarProtestoRequest from CancelarProtesto
  * @phpstan-import-type NegativarBoletoRequest from NegativarBoleto
  */
 final class Ailos
@@ -140,6 +142,14 @@ final class Ailos
     public function negativarBoleto(array $instrucoes): void
     {
         new NegativarBoleto($this->context)->handle($instrucoes);
+    }
+
+    /**
+     * @param CancelarProtestoRequest $instrucoes
+     */
+    public function cancelarProtesto(array $instrucoes): void
+    {
+        new CancelarProtesto($this->context)->handle($instrucoes);
     }
 
 }
