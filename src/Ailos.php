@@ -19,6 +19,10 @@ use Ailos\Sdk\Endpoints\Pagador\ListarPagadores;
  * @phpstan-import-type CadastrarPagadorRequest from CadastrarPagador
  * @phpstan-import-type AlterarPagadorRequest from AlterarPagador
  * @phpstan-import-type ListarPagadoresResponse from ListarPagadores
+ * @phpstan-import-type GerarBoletoRequest from GerarBoleto
+ * @phpstan-import-type ConsultarBoletoResponse from ConsultarBoleto
+ * @phpstan-import-type GerarLoteBoletoRequest from GerarLoteBoleto
+ * @phpstan-import-type GerarLoteCarneRequest from GerarLoteCarne
  */
 final class Ailos
 {
@@ -27,7 +31,7 @@ final class Ailos
     }
 
     /**
-     * @param array<string, mixed> $payload
+     * @param array{state: string, code: string} $payload
      */
     public function handleJwtCallback(array $payload): void
     {
@@ -71,7 +75,7 @@ final class Ailos
     }
 
     /**
-     * @return array<string, mixed>
+    * @return ConsultarBoletoResponse
      */
     public function consultarBoleto(string $convenio, string $numero): array
     {
@@ -79,7 +83,7 @@ final class Ailos
     }
 
     /**
-     * @param array<string, mixed> $boleto
+    * @param GerarBoletoRequest $boleto
      */
     public function gerarBoleto(string $convenio, array $boleto): void
     {
@@ -87,7 +91,7 @@ final class Ailos
     }
 
     /**
-     * @param array<string, mixed> $lote
+    * @param GerarLoteBoletoRequest $lote
      */
     public function gerarLoteBoleto(string $convenio, array $lote): void
     {
@@ -95,7 +99,7 @@ final class Ailos
     }
 
     /**
-     * @param array<string, mixed> $lote
+    * @param GerarLoteCarneRequest $lote
      */
     public function gerarLoteCarne(string $convenio, array $lote): void
     {
