@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Ailos\Sdk\Endpoints\Boleto;
+namespace Ailos\Sdk\Endpoints\Emissao;
 
 use Ailos\Sdk\Endpoints\Endpoint;
 use Ailos\Sdk\Http\Request;
