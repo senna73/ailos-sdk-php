@@ -9,7 +9,7 @@ use Ailos\Sdk\Http\Request;
 
 
 /**
- * @phpstan-type CadastrarPagadorBody array{
+ * @phpstan-type CadastrarPagadorRequest array{
  *     entidadeLegal: array{
  *         identificadorReceitaFederal: string,
  *         tipoPessoa: int,
@@ -20,7 +20,7 @@ use Ailos\Sdk\Http\Request;
  *         ddd: string,
  *         numero: string
  *     },
- *     emails: array<int, array{
+ *     emails: list<array{
  *         endereco: string
  *     }>,
  *     endereco: array{
@@ -32,14 +32,14 @@ use Ailos\Sdk\Http\Request;
  *         cidade: string,
  *         uf: string
  *     },
- *     mensagemPagador: array<int, string>,
+ *     mensagemPagador: list<string>,
  *     dda: bool
  * }
  */
 final class CadastrarPagador extends Endpoint
 {
     /**
-     * @param CadastrarPagadorBody $pagador
+    * @param CadastrarPagadorRequest $pagador
      */
     public function handle(array $pagador): void
     {

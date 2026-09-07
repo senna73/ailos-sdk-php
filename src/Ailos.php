@@ -16,7 +16,9 @@ use Ailos\Sdk\Endpoints\Pagador\CadastrarPagador;
 use Ailos\Sdk\Endpoints\Pagador\ListarPagadores;
 
 /**
- * @phpstan-import-type CadastrarPagadorBody from CadastrarPagador
+ * @phpstan-import-type CadastrarPagadorRequest from CadastrarPagador
+ * @phpstan-import-type AlterarPagadorRequest from AlterarPagador
+ * @phpstan-import-type ListarPagadoresResponse from ListarPagadores
  */
 final class Ailos
 {
@@ -45,7 +47,7 @@ final class Ailos
     }
 
     /**
-     * @return array<string, mixed>
+        * @return ListarPagadoresResponse
      */
     public function listarPagadores(): array
     {
@@ -53,7 +55,7 @@ final class Ailos
     }
 
     /**
-     * @param CadastrarPagadorBody $pagador
+    * @param CadastrarPagadorRequest $pagador
      */
     public function cadastrarPagador(array $pagador): void
     {
@@ -61,7 +63,7 @@ final class Ailos
     }
 
     /**
-     * @param array<string, mixed> $pagador
+        * @param AlterarPagadorRequest $pagador
      */
     public function alterarPagador(array $pagador): void
     {
