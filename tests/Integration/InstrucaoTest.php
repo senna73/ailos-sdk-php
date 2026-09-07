@@ -10,6 +10,7 @@ use Ailos\Sdk\Endpoints\Instrucao\CancelarAbatimento;
 use Ailos\Sdk\Endpoints\Instrucao\CancelarEnvioSms;
 use Ailos\Sdk\Endpoints\Instrucao\CancelarNegativacao;
 use Ailos\Sdk\Endpoints\Instrucao\CancelarProtesto;
+use Ailos\Sdk\Endpoints\Instrucao\ConcederAbatimento;
 use Ailos\Sdk\Endpoints\Instrucao\GerarEnvioSms;
 use Ailos\Sdk\Endpoints\Instrucao\NegativarBoleto;
 use Ailos\Sdk\Endpoints\Instrucao\ProtestoAutomatico;
@@ -21,6 +22,7 @@ use Ailos\Sdk\Tests\IntegrationTestCase;
  * @phpstan-import-type AlterarFormaEmissaoRequest from AlterarFormaEmissao
  * @phpstan-import-type ProtestoAutomaticoRequest from ProtestoAutomatico
  * @phpstan-import-type GerarEnvioSmsRequest from GerarEnvioSms
+ * @phpstan-import-type ConcederAbatimentoRequest from ConcederAbatimento
  */
 class InstrucaoTest extends IntegrationTestCase
 {
@@ -48,6 +50,13 @@ class InstrucaoTest extends IntegrationTestCase
     public function testCancelarAbatimento(): void
     {
         new CancelarAbatimento(parent::$context)->handle($this->instrucoes());
+
+        $this->addToAssertionCount(1);
+    }
+
+    public function testConcederAbatimento(): void
+    {
+        new ConcederAbatimento(parent::$context)->handle($this->concederAbatimento());
 
         $this->addToAssertionCount(1);
     }
@@ -151,6 +160,20 @@ class InstrucaoTest extends IntegrationTestCase
                         'ddd' => '47',
                         'numero' => '999887766',
                     ],
+                ],
+            ],
+        ];
+    }
+
+    /** @return ConcederAbatimentoRequest */
+    private function concederAbatimento(): array
+    {
+        return [
+            'boletos' => [
+                [
+                    'numeroConvenio' => 101004,
+                    'numeroBoleto' => 100001,
+                    'valorAbatimento' => 10,
                 ],
             ],
         ];

@@ -17,6 +17,7 @@ use Ailos\Sdk\Endpoints\Instrucao\CancelarAbatimento;
 use Ailos\Sdk\Endpoints\Instrucao\CancelarNegativacao;
 use Ailos\Sdk\Endpoints\Instrucao\CancelarEnvioSms;
 use Ailos\Sdk\Endpoints\Instrucao\CancelarProtesto;
+use Ailos\Sdk\Endpoints\Instrucao\ConcederAbatimento;
 use Ailos\Sdk\Endpoints\Instrucao\GerarEnvioSms;
 use Ailos\Sdk\Endpoints\Instrucao\NegativarBoleto;
 use Ailos\Sdk\Endpoints\Instrucao\ProtestoAutomatico;
@@ -41,6 +42,7 @@ use Ailos\Sdk\Endpoints\Pagador\ListarPagadores;
  * @phpstan-import-type CancelarNegativacaoRequest from CancelarNegativacao
  * @phpstan-import-type CancelarEnvioSmsRequest from CancelarEnvioSms
  * @phpstan-import-type CancelarProtestoRequest from CancelarProtesto
+ * @phpstan-import-type ConcederAbatimentoRequest from ConcederAbatimento
  * @phpstan-import-type GerarEnvioSmsRequest from GerarEnvioSms
  * @phpstan-import-type NegativarBoletoRequest from NegativarBoleto
  * @phpstan-import-type ProtestoAutomaticoRequest from ProtestoAutomatico
@@ -162,6 +164,14 @@ final class Ailos
     public function cancelarAbatimento(array $instrucoes): void
     {
         new CancelarAbatimento($this->context)->handle($instrucoes);
+    }
+
+    /**
+     * @param ConcederAbatimentoRequest $instrucoes
+     */
+    public function concederAbatimento(array $instrucoes): void
+    {
+        new ConcederAbatimento($this->context)->handle($instrucoes);
     }
 
     /**
