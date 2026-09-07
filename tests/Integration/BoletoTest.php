@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Ailos\Sdk\Tests\Integration;
 
-use Ailos\Sdk\Endpoints\Cobranca\Emissao\ConsultarBoleto;
-use Ailos\Sdk\Endpoints\Cobranca\Emissao\GerarBoleto;
-use Ailos\Sdk\Endpoints\Cobranca\Emissao\GerarLoteBoleto;
-use Ailos\Sdk\Endpoints\Cobranca\Emissao\GerarLoteCarne;
+use Ailos\Sdk\Cobranca\Endpoints\Emissao\ConsultarBoleto;
+use Ailos\Sdk\Cobranca\Endpoints\Emissao\GerarBoleto;
+use Ailos\Sdk\Cobranca\Endpoints\Emissao\GerarLoteBoleto;
+use Ailos\Sdk\Cobranca\Endpoints\Emissao\GerarLoteCarne;
 use Ailos\Sdk\Tests\IntegrationTestCase;
 
 /**
