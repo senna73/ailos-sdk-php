@@ -7,10 +7,39 @@ namespace Ailos\Sdk\Endpoints\Pagador;
 use Ailos\Sdk\Endpoints\Endpoint;
 use Ailos\Sdk\Http\Request;
 
+
+/**
+ * @phpstan-type CadastrarPagadorBody array{
+ *     entidadeLegal: array{
+ *         identificadorReceitaFederal: string,
+ *         tipoPessoa: int,
+ *         nome: string
+ *     },
+ *     telefone: array{
+ *         ddi: string,
+ *         ddd: string,
+ *         numero: string
+ *     },
+ *     emails: array<int, array{
+ *         endereco: string
+ *     }>,
+ *     endereco: array{
+ *         cep: string,
+ *         logradouro: string,
+ *         numero: string,
+ *         complemento: string,
+ *         bairro: string,
+ *         cidade: string,
+ *         uf: string
+ *     },
+ *     mensagemPagador: array<int, string>,
+ *     dda: bool
+ * }
+ */
 final class CadastrarPagador extends Endpoint
 {
     /**
-     * @param array<string, mixed> $pagador
+     * @param CadastrarPagadorBody $pagador
      */
     public function handle(array $pagador): void
     {

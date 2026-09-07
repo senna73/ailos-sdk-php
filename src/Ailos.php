@@ -15,6 +15,9 @@ use Ailos\Sdk\Endpoints\Pagador\AlterarPagador;
 use Ailos\Sdk\Endpoints\Pagador\CadastrarPagador;
 use Ailos\Sdk\Endpoints\Pagador\ListarPagadores;
 
+/**
+ * @phpstan-import-type CadastrarPagadorBody from CadastrarPagador
+ */
 final class Ailos
 {
     public function __construct(private AilosContext $context)
@@ -28,7 +31,7 @@ final class Ailos
     {
         $auth = new Auth($this->context);
 
-        if ($payload['state'] == null) {
+        if (!isset($payload['state'])) {
             throw new \RuntimeException('State não encontrado no JWT.');
         }
 
@@ -50,11 +53,11 @@ final class Ailos
     }
 
     /**
-     * @param array<string, mixed> $pagador
+     * @param CadastrarPagadorBody $pagador
      */
     public function cadastrarPagador(array $pagador): void
     {
-        return new CadastrarPagador($this->context)->handle($pagador);
+        new CadastrarPagador($this->context)->handle($pagador);
     }
 
     /**
