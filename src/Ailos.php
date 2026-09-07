@@ -16,6 +16,7 @@ use Ailos\Sdk\Endpoints\Instrucao\CancelarNegativacao;
 use Ailos\Sdk\Endpoints\Instrucao\CancelarProtesto;
 use Ailos\Sdk\Endpoints\Instrucao\NegativarBoleto;
 use Ailos\Sdk\Endpoints\Instrucao\ProtestoAutomatico;
+use Ailos\Sdk\Endpoints\Instrucao\ProtestarBoleto;
 use Ailos\Sdk\Endpoints\Pagador\AlterarPagador;
 use Ailos\Sdk\Endpoints\Pagador\CadastrarPagador;
 use Ailos\Sdk\Endpoints\Pagador\ConsultarPagador;
@@ -35,6 +36,7 @@ use Ailos\Sdk\Endpoints\Pagador\ListarPagadores;
  * @phpstan-import-type CancelarProtestoRequest from CancelarProtesto
  * @phpstan-import-type NegativarBoletoRequest from NegativarBoleto
  * @phpstan-import-type ProtestoAutomaticoRequest from ProtestoAutomatico
+ * @phpstan-import-type ProtestarBoletoRequest from ProtestarBoleto
  */
 final class Ailos
 {
@@ -160,6 +162,14 @@ final class Ailos
     public function protestoAutomatico(array $instrucoes): void
     {
         new ProtestoAutomatico($this->context)->handle($instrucoes);
+    }
+
+    /**
+     * @param ProtestarBoletoRequest $instrucoes
+     */
+    public function protestarBoleto(array $instrucoes): void
+    {
+        new ProtestarBoleto($this->context)->handle($instrucoes);
     }
 
 }

@@ -9,6 +9,7 @@ use Ailos\Sdk\Endpoints\Instrucao\CancelarNegativacao;
 use Ailos\Sdk\Endpoints\Instrucao\CancelarProtesto;
 use Ailos\Sdk\Endpoints\Instrucao\NegativarBoleto;
 use Ailos\Sdk\Endpoints\Instrucao\ProtestoAutomatico;
+use Ailos\Sdk\Endpoints\Instrucao\ProtestarBoleto;
 use Ailos\Sdk\Tests\IntegrationTestCase;
 
 /**
@@ -48,6 +49,13 @@ class InstrucaoTest extends IntegrationTestCase
     public function testProtestoAutomatico(): void
     {
         new ProtestoAutomatico(parent::$context)->handle($this->protestoAutomatico());
+
+        $this->addToAssertionCount(1);
+    }
+
+    public function testProtestarBoleto(): void
+    {
+        new ProtestarBoleto(parent::$context)->handle($this->instrucoes());
 
         $this->addToAssertionCount(1);
     }
