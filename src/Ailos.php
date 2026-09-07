@@ -14,6 +14,7 @@ use Ailos\Sdk\Endpoints\Emissao\GerarLoteCarne;
 use Ailos\Sdk\Endpoints\Instrucao\AnuenciaEletronica;
 use Ailos\Sdk\Endpoints\Instrucao\AlterarFormaEmissao;
 use Ailos\Sdk\Endpoints\Instrucao\AlteracaoVencimento;
+use Ailos\Sdk\Endpoints\Instrucao\Baixa;
 use Ailos\Sdk\Endpoints\Instrucao\CancelarAbatimento;
 use Ailos\Sdk\Endpoints\Instrucao\CancelarNegativacao;
 use Ailos\Sdk\Endpoints\Instrucao\CancelarEnvioSms;
@@ -42,6 +43,7 @@ use Ailos\Sdk\Endpoints\Pagador\ListarPagadores;
  * @phpstan-import-type AnuenciaEletronicaRequest from AnuenciaEletronica
  * @phpstan-import-type AlterarFormaEmissaoRequest from AlterarFormaEmissao
  * @phpstan-import-type AlteracaoVencimentoRequest from AlteracaoVencimento
+ * @phpstan-import-type BaixaRequest from Baixa
  * @phpstan-import-type CancelarAbatimentoRequest from CancelarAbatimento
  * @phpstan-import-type CancelarNegativacaoRequest from CancelarNegativacao
  * @phpstan-import-type CancelarEnvioSmsRequest from CancelarEnvioSms
@@ -170,6 +172,14 @@ final class Ailos
     public function alteracaoVencimento(array $instrucoes): void
     {
         new AlteracaoVencimento($this->context)->handle($instrucoes);
+    }
+
+    /**
+     * @param BaixaRequest $instrucoes
+     */
+    public function baixa(array $instrucoes): void
+    {
+        new Baixa($this->context)->handle($instrucoes);
     }
 
     /**

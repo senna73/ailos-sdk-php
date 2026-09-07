@@ -7,6 +7,7 @@ namespace Ailos\Sdk\Tests\Integration;
 use Ailos\Sdk\Endpoints\Instrucao\AnuenciaEletronica;
 use Ailos\Sdk\Endpoints\Instrucao\AlterarFormaEmissao;
 use Ailos\Sdk\Endpoints\Instrucao\AlteracaoVencimento;
+use Ailos\Sdk\Endpoints\Instrucao\Baixa;
 use Ailos\Sdk\Endpoints\Instrucao\CancelarAbatimento;
 use Ailos\Sdk\Endpoints\Instrucao\CancelarDescontos;
 use Ailos\Sdk\Endpoints\Instrucao\CancelarEnvioSms;
@@ -55,6 +56,13 @@ class InstrucaoTest extends IntegrationTestCase
     public function testAlteracaoVencimento(): void
     {
         new AlteracaoVencimento(parent::$context)->handle($this->alteracaoVencimento());
+
+        $this->addToAssertionCount(1);
+    }
+
+    public function testBaixa(): void
+    {
+        new Baixa(parent::$context)->handle($this->instrucoes());
 
         $this->addToAssertionCount(1);
     }
