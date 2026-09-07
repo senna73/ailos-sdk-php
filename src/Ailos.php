@@ -14,6 +14,7 @@ use Ailos\Sdk\Endpoints\Emissao\GerarLoteCarne;
 use Ailos\Sdk\Endpoints\Instrucao\AnuenciaEletronica;
 use Ailos\Sdk\Endpoints\Instrucao\AlterarFormaEmissao;
 use Ailos\Sdk\Endpoints\Instrucao\CancelarNegativacao;
+use Ailos\Sdk\Endpoints\Instrucao\CancelarEnvioSms;
 use Ailos\Sdk\Endpoints\Instrucao\CancelarProtesto;
 use Ailos\Sdk\Endpoints\Instrucao\NegativarBoleto;
 use Ailos\Sdk\Endpoints\Instrucao\ProtestoAutomatico;
@@ -35,6 +36,7 @@ use Ailos\Sdk\Endpoints\Pagador\ListarPagadores;
  * @phpstan-import-type AnuenciaEletronicaRequest from AnuenciaEletronica
  * @phpstan-import-type AlterarFormaEmissaoRequest from AlterarFormaEmissao
  * @phpstan-import-type CancelarNegativacaoRequest from CancelarNegativacao
+ * @phpstan-import-type CancelarEnvioSmsRequest from CancelarEnvioSms
  * @phpstan-import-type CancelarProtestoRequest from CancelarProtesto
  * @phpstan-import-type NegativarBoletoRequest from NegativarBoleto
  * @phpstan-import-type ProtestoAutomaticoRequest from ProtestoAutomatico
@@ -148,6 +150,14 @@ final class Ailos
     public function alterarFormaEmissao(array $instrucoes): void
     {
         new AlterarFormaEmissao($this->context)->handle($instrucoes);
+    }
+
+    /**
+     * @param CancelarEnvioSmsRequest $instrucoes
+     */
+    public function cancelarEnvioSms(array $instrucoes): void
+    {
+        new CancelarEnvioSms($this->context)->handle($instrucoes);
     }
 
     /**
