@@ -22,7 +22,7 @@ final class CancelarEnvioSms extends Endpoint
      */
     public function handle(array $instrucoes): void
     {
-        $this->post(new Request(
+        $this->delete(new Request(
             path: '/ailos/cobranca/api/v1/boletos/aviso-sms/lote',
             body: $instrucoes
         ));

@@ -33,4 +33,9 @@ abstract class Endpoint
     {
         return $this->http->put($request);
     }
+
+    protected function delete(Request $request): Response
+    {
+        return $this->http->delete($request);
+    }
 }

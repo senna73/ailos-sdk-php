@@ -33,6 +33,14 @@ final class CurlHttp implements IHttp
         return $this->handleResponse($curl);
     }
 
+    public function delete(Request $request): Response
+    {
+        $curl = $this->newCurl($request);
+        $curl->delete($request->path);
+
+        return $this->handleResponse($curl);
+    }
+
     private function newCurl(Request $request): Curl
     {
         $curl = new Curl();

@@ -28,6 +28,11 @@ final class AuthenticatedHttp implements IHttp
         return $this->context->config->http->put($this->authenticate($request));
     }
 
+    public function delete(Request $request): Response
+    {
+        return $this->context->config->http->delete($this->authenticate($request));
+    }
+
     private function authenticate(Request $request): Request
     {
         $request = $request->withPath(
