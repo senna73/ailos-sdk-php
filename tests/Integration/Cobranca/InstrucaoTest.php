@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Ailos\Sdk\Tests\Integration\Cobranca;
 
-use Ailos\Sdk\Cobranca\Endpoints\Instrucao\AnuenciaEletronica;
-use Ailos\Sdk\Cobranca\Endpoints\Instrucao\AlterarFormaEmissao;
 use Ailos\Sdk\Cobranca\Endpoints\Instrucao\AlteracaoVencimento;
+use Ailos\Sdk\Cobranca\Endpoints\Instrucao\AlterarFormaEmissao;
+use Ailos\Sdk\Cobranca\Endpoints\Instrucao\AnuenciaEletronica;
 use Ailos\Sdk\Cobranca\Endpoints\Instrucao\Baixa;
 use Ailos\Sdk\Cobranca\Endpoints\Instrucao\CancelarAbatimento;
 use Ailos\Sdk\Cobranca\Endpoints\Instrucao\CancelarDescontos;
@@ -17,8 +17,8 @@ use Ailos\Sdk\Cobranca\Endpoints\Instrucao\ConcederAbatimento;
 use Ailos\Sdk\Cobranca\Endpoints\Instrucao\ConcederDesconto;
 use Ailos\Sdk\Cobranca\Endpoints\Instrucao\GerarEnvioSms;
 use Ailos\Sdk\Cobranca\Endpoints\Instrucao\NegativarBoleto;
-use Ailos\Sdk\Cobranca\Endpoints\Instrucao\ProtestoAutomatico;
 use Ailos\Sdk\Cobranca\Endpoints\Instrucao\ProtestarBoleto;
+use Ailos\Sdk\Cobranca\Endpoints\Instrucao\ProtestoAutomatico;
 use Ailos\Sdk\Tests\CobrancaTestCase;
 
 /**

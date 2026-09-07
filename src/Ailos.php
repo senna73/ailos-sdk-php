@@ -9,7 +9,8 @@ use Ailos\Sdk\Cobranca\Context\CobrancaContext;
 
 final class Ailos
 {
-    public function cobranca(CobrancaContext $context) {
+    public function cobranca(CobrancaContext $context)
+    {
         return new Cobranca($context);
     }
 }
